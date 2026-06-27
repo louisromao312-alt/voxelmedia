@@ -1,65 +1,61 @@
-import Image from "next/image";
+import BackgroundGrid from '@/components/BackgroundGrid'
+import HeroSection from '@/components/HeroSection'
+import IndustryGap from '@/components/IndustryGap'
+import VoxelIntelligence from '@/components/VoxelIntelligence'
+import AgencyBridge from '@/components/AgencyBridge'
+import ScrollHillBlocks from '@/components/ScrollHillBlocks'
+import ArchitectsAdvantage from '@/components/ArchitectsAdvantage'
+import FreemiumInsights from '@/components/FreemiumInsights'
+import WaitlistForm from '@/components/WaitlistForm'
+import JourneyShell from '@/components/JourneyShell'
+import ScrollToWaitlist from '@/components/ScrollToWaitlist'
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+    <>
+      <BackgroundGrid />
+
+      <JourneyShell>
+      <div className="relative bg-[#0A0A0C]" style={{ zIndex: 10 }}>
+        <header className="sticky top-0 z-50 flex items-center justify-between px-4 sm:px-6 py-5 max-w-7xl mx-auto w-full bg-[#0A0A0C]/80 backdrop-blur-md border-b border-white/[0.04]">
+          <div className="flex items-center gap-2" aria-label="Voxel wordmark">
+            <div
+              className="w-5 h-5 border border-white/40 rotate-45"
+              aria-hidden="true"
+              style={{ boxShadow: '0 0 10px rgba(255,255,255,0.2)' }}
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
-  );
+            <span className="font-mono text-sm font-semibold tracking-widest text-white uppercase">
+              Voxel
+            </span>
+          </div>
+          <nav aria-label="Primary navigation">
+            <ScrollToWaitlist />
+          </nav>
+        </header>
+
+        <main className="bg-[#0A0A0C]">
+          <HeroSection />
+          <ScrollHillBlocks>
+            <IndustryGap />
+            <VoxelIntelligence />
+            <AgencyBridge />
+            <ArchitectsAdvantage />
+          </ScrollHillBlocks>
+          <FreemiumInsights />
+          <WaitlistForm id="waitlist" />
+        </main>
+
+        <footer
+          className="border-t border-white/[0.05] px-6 py-8 text-center bg-[#0A0A0C]"
+          aria-label="Site footer"
+        >
+          <p className="text-xs font-mono text-zinc-600 tracking-widest uppercase">
+            © {new Date().getFullYear()} Voxel · The Minecraft Data Terminal ·{' '}
+            <span className="text-green-400">●</span> Private Beta
+          </p>
+        </footer>
+      </div>
+      </JourneyShell>
+    </>
+  )
 }
