@@ -3,68 +3,53 @@
 import { useMemo } from 'react'
 import { generateBrainVoxels, BRAIN_BLOCK_SIZE, type BrainVoxel } from '@/lib/voxelBrainLayout'
 
-const GLOW_STYLES: Record<
+const BLOCK_COLORS: Record<
   BrainVoxel['glow'],
-  { top: string; side: string; glow?: string }
+  { top: string; front: string; side: string; back: string; bottom: string; glow?: string }
 > = {
   core: {
-    top: 'rgba(74,222,128,0.82)',
-    side: 'rgba(74,222,128,0.55)',
-    glow: '0 0 20px rgba(74,222,128,0.55)',
+    top: '#86efac',
+    front: '#4ade80',
+    side: '#22c55e',
+    back: '#16a34a',
+    bottom: '#15803d',
+    glow: '0 0 20px rgba(74,222,128,0.5)',
   },
   mid: {
-    top: 'rgba(74,222,128,0.52)',
-    side: 'rgba(74,222,128,0.38)',
-    glow: '0 0 12px rgba(74,222,128,0.3)',
+    top: '#6ee7b7',
+    front: '#34d399',
+    side: '#10b981',
+    back: '#059669',
+    bottom: '#047857',
+    glow: '0 0 12px rgba(52,211,153,0.35)',
   },
   surface: {
-    top: 'rgba(200,230,210,0.38)',
-    side: 'rgba(180,210,190,0.28)',
+    top: '#d4e4d4',
+    front: '#b8ccb8',
+    side: '#9cb09c',
+    back: '#849884',
+    bottom: '#708070',
   },
   none: {
-    top: 'rgba(190,205,195,0.32)',
-    side: 'rgba(170,185,175,0.24)',
+    top: '#c4d0c4',
+    front: '#a8b4a8',
+    side: '#8c988c',
+    back: '#788878',
+    bottom: '#647064',
   },
 }
 
 function VoxelCube({ v, size }: { v: BrainVoxel; size: number }) {
-  const s = GLOW_STYLES[v.glow]
+  const c = BLOCK_COLORS[v.glow]
   const h = size / 2
-  const isGreen = v.glow === 'core' || v.glow === 'mid'
 
   const faces = [
-    {
-      name: 'front',
-      bg: isGreen ? 'rgba(74,222,128,0.42)' : s.side,
-      transform: `rotateY(0deg) translateZ(${h}px)`,
-      shadow: s.glow,
-    },
-    {
-      name: 'back',
-      bg: isGreen ? 'rgba(74,222,128,0.32)' : 'rgba(150,170,160,0.22)',
-      transform: `rotateY(180deg) translateZ(${h}px)`,
-    },
-    {
-      name: 'right',
-      bg: isGreen ? 'rgba(74,222,128,0.36)' : s.side,
-      transform: `rotateY(90deg) translateZ(${h}px)`,
-    },
-    {
-      name: 'left',
-      bg: isGreen ? 'rgba(74,222,128,0.3)' : 'rgba(150,170,160,0.2)',
-      transform: `rotateY(-90deg) translateZ(${h}px)`,
-    },
-    {
-      name: 'top',
-      bg: s.top,
-      transform: `rotateX(90deg) translateZ(${h}px)`,
-      shadow: s.glow,
-    },
-    {
-      name: 'bottom',
-      bg: isGreen ? 'rgba(74,222,128,0.28)' : 'rgba(130,145,135,0.18)',
-      transform: `rotateX(-90deg) translateZ(${h}px)`,
-    },
+    { name: 'front', bg: c.front, transform: `rotateY(0deg) translateZ(${h}px)`, glow: c.glow },
+    { name: 'back', bg: c.back, transform: `rotateY(180deg) translateZ(${h}px)` },
+    { name: 'right', bg: c.side, transform: `rotateY(90deg) translateZ(${h}px)` },
+    { name: 'left', bg: c.back, transform: `rotateY(-90deg) translateZ(${h}px)` },
+    { name: 'top', bg: c.top, transform: `rotateX(90deg) translateZ(${h}px)`, glow: c.glow },
+    { name: 'bottom', bg: c.bottom, transform: `rotateX(-90deg) translateZ(${h}px)` },
   ] as const
 
   return (
@@ -94,7 +79,7 @@ function VoxelCube({ v, size }: { v: BrainVoxel; size: number }) {
               position: 'absolute',
               inset: 0,
               background: f.bg,
-              boxShadow: 'shadow' in f ? f.shadow : undefined,
+              boxShadow: 'glow' in f ? f.glow : undefined,
               transform: f.transform,
               backfaceVisibility: 'hidden',
             }}

@@ -17,6 +17,9 @@ type HillBlock = {
   rotate: number
   tilt: number
   opacity: number
+  floatY: number
+  floatDuration: number
+  floatDelay: number
 }
 
 function buildHillScatter(): HillBlock[] {
@@ -38,6 +41,9 @@ function buildHillScatter(): HillBlock[] {
       rotate: Math.floor((seeded(i, 5) - 0.5) * 70),
       tilt: 50 + Math.floor(seeded(i, 6) * 14),
       opacity: Math.round((0.3 + seeded(i, 7) * 0.5) * 1000) / 1000,
+      floatY: 4 + seeded(i, 8) * 9,
+      floatDuration: 3.2 + seeded(i, 9) * 2.8,
+      floatDelay: seeded(i, 10) * 2.5,
     })
   }
 
@@ -66,22 +72,34 @@ export default function WaitlistBlockBg() {
             left: b.left,
             bottom: b.bottom,
           }}
-          initial={{ x: '-50%', opacity: b.opacity }}
-          animate={{ x: '-50%', opacity: b.opacity }}
-          whileHover={{
+          initial={{ x: '-50%', y: 0, opacity: b.opacity }}
+          animate={{
             x: '-50%',
-            y: -7,
-            scale: 1.05,
-            opacity: Math.min(b.opacity + 0.22, 1),
+            y: [0, -b.floatY, 0],
+            opacity: b.opacity,
           }}
-          transition={{ duration: 0.25, ease: EASE }}
+          transition={{
+            x: { duration: 0 },
+            opacity: { duration: 0 },
+            y: {
+              duration: b.floatDuration,
+              repeat: Infinity,
+              ease: 'easeInOut',
+              delay: b.floatDelay,
+            },
+          }}
         >
-          <VoxelCube
-            size={b.size}
-            rotate={b.rotate}
-            tilt={b.tilt}
-            hoverable
-          />
+          <motion.div
+            whileHover={{ y: -7, scale: 1.05 }}
+            transition={{ duration: 0.25, ease: EASE }}
+          >
+            <VoxelCube
+              size={b.size}
+              rotate={b.rotate}
+              tilt={b.tilt}
+              hoverable
+            />
+          </motion.div>
         </motion.div>
       ))}
     </div>
