@@ -1,19 +1,26 @@
 'use client'
 
-import { useRef } from 'react'
+import { useRef, type PointerEvent } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { Building2, Users, Shield } from 'lucide-react'
 import SectionReveal, { EASE } from '@/components/SectionReveal'
 import { RoleBadge } from '@/components/JourneySelector'
 import { useUserJourney } from '@/context/UserJourneyContext'
 
+import { useBurst } from '@/context/BlockBurstContext'
+
 export default function AgencyBridge() {
   const bridgeRef = useRef<HTMLDivElement>(null)
   const bridgeInView = useInView(bridgeRef, { once: true, amount: 0.35 })
   const { role } = useUserJourney()
+  const { triggerBurst } = useBurst()
 
   const brandEmphasis = role === 'brand'
   const creatorEmphasis = role === 'creator'
+
+  const handleCardBurst = (e: PointerEvent<HTMLDivElement>) => {
+    triggerBurst(e.clientX, e.clientY)
+  }
 
   return (
     <SectionReveal
@@ -51,7 +58,7 @@ export default function AgencyBridge() {
         >
           {/* Brand */}
           <motion.div
-            className={`flex flex-col items-center md:items-end text-center md:text-right gap-4 p-8 rounded-2xl border bg-white/[0.02] transition-all duration-500 ${
+            className={`flex flex-col items-center md:items-end text-center md:text-right gap-4 p-8 rounded-2xl border bg-white/[0.02] transition-all duration-500 cursor-pointer select-none ${
               brandEmphasis
                 ? 'border-blue-400/30 bg-blue-400/5 scale-[1.02] shadow-[0_0_40px_rgba(96,165,250,0.08)]'
                 : creatorEmphasis
@@ -61,6 +68,8 @@ export default function AgencyBridge() {
             initial={{ opacity: 0, x: -32 }}
             animate={bridgeInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.7, ease: EASE }}
+            onPointerDown={handleCardBurst}
+            whileTap={{ scale: 0.97 }}
           >
             <div className="flex items-center justify-center w-14 h-14 rounded-xl border border-white/10 bg-white/[0.04] text-blue-400">
               <Building2 size={24} aria-hidden="true" />
@@ -208,7 +217,7 @@ export default function AgencyBridge() {
 
           {/* Creator */}
           <motion.div
-            className={`flex flex-col items-center md:items-start text-center md:text-left gap-4 p-8 rounded-2xl border bg-white/[0.02] transition-all duration-500 ${
+            className={`flex flex-col items-center md:items-start text-center md:text-left gap-4 p-8 rounded-2xl border bg-white/[0.02] transition-all duration-500 cursor-pointer select-none ${
               creatorEmphasis
                 ? 'border-green-400/30 bg-green-400/5 scale-[1.02] shadow-[0_0_40px_rgba(74,222,128,0.08)]'
                 : brandEmphasis
@@ -218,6 +227,8 @@ export default function AgencyBridge() {
             initial={{ opacity: 0, x: 32 }}
             animate={bridgeInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.7, ease: EASE, delay: 0.1 }}
+            onPointerDown={handleCardBurst}
+            whileTap={{ scale: 0.97 }}
           >
             <div className="flex items-center justify-center w-14 h-14 rounded-xl border border-white/10 bg-white/[0.04] text-green-400">
               <Users size={24} aria-hidden="true" />

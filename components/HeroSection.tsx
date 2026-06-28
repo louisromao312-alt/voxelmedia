@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useUserJourney, HERO_COPY } from '@/context/UserJourneyContext'
 import JourneySelector from '@/components/JourneySelector'
 import WaitlistSocialProof from '@/components/WaitlistSocialProof'
+import HeroVoxelGrid from '@/components/HeroVoxelGrid'
 import { EASE } from '@/components/SectionReveal'
 
 const SCRAMBLE_CHARS = '!<>-_\\/[]{}=+*^?#ABCDEFGHIJKLMNOPQRSTUVWXYZ01'
@@ -97,48 +98,6 @@ function ScrambleHeadline({ text, startDelay = 0 }: { text: string; startDelay?:
   )
 }
 
-function VoxelGeometry({ mouseX, mouseY }: { mouseX: number; mouseY: number }) {
-  const cx = typeof window !== 'undefined' ? window.innerWidth / 2 : 0
-  const cy = typeof window !== 'undefined' ? window.innerHeight / 2 : 0
-  const dx = (mouseX - cx) / (cx || 1)
-  const dy = (mouseY - cy) / (cy || 1)
-
-  const LAYERS = [
-    { size: 340, opacity: 0.1, depth: 1.0 },
-    { size: 240, opacity: 0.14, depth: 1.6 },
-    { size: 160, opacity: 0.18, depth: 2.4 },
-    { size: 90, opacity: 0.22, depth: 3.2 },
-  ]
-
-  return (
-    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-      {LAYERS.map((layer, i) => (
-        <motion.div
-          key={i}
-          className="absolute"
-          animate={{
-            x: dx * layer.depth * 12,
-            y: dy * layer.depth * 12,
-            rotateX: -dy * layer.depth * 5,
-            rotateY: dx * layer.depth * 5,
-          }}
-          transition={{ type: 'spring', stiffness: 40, damping: 18, mass: 1 }}
-          style={{ perspective: 900 }}
-        >
-          <div
-            style={{
-              width: layer.size,
-              height: layer.size,
-              border: `1px solid rgba(255,255,255,${layer.opacity})`,
-              transform: 'rotate(45deg)',
-              boxShadow: `0 0 20px rgba(255,255,255,${layer.opacity * 0.5})`,
-            }}
-          />
-        </motion.div>
-      ))}
-    </div>
-  )
-}
 
 function scrollToWaitlist() {
   document.getElementById('waitlist')?.scrollIntoView({ behavior: 'smooth' })
@@ -150,39 +109,25 @@ export default function HeroSection() {
   const copy = HERO_COPY[contentKey]
   const startDelay = contentKey === 'default' ? 400 : 0
 
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
-  const [isMobile, setIsMobile] = useState(true)
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
     setMounted(true)
-    setIsMobile(window.matchMedia('(pointer: coarse)').matches)
-    setMousePos({
-      x: typeof window !== 'undefined' ? window.innerWidth / 2 : 0,
-      y: typeof window !== 'undefined' ? window.innerHeight / 2 : 0,
-    })
   }, [])
-
-  useEffect(() => {
-    if (isMobile) return
-    const handle = (e: MouseEvent) =>
-      setMousePos({ x: e.clientX, y: e.clientY })
-    window.addEventListener('mousemove', handle, { passive: true })
-    return () => window.removeEventListener('mousemove', handle)
-  }, [isMobile])
 
   return (
     <section
+      id="hero-section"
       className="relative min-h-[88vh] flex flex-col items-center justify-center px-4 text-center overflow-hidden bg-[#0A0A0C]"
       aria-labelledby="hero-heading"
     >
-      {mounted && <VoxelGeometry mouseX={mousePos.x} mouseY={mousePos.y} />}
+      {mounted && <HeroVoxelGrid />}
 
       <div
-        className="absolute inset-0 pointer-events-none"
+        className="absolute inset-0 pointer-events-none z-[1]"
         style={{
           background:
-            'radial-gradient(ellipse 60% 50% at 50% 50%, rgba(10,10,12,0.0) 0%, rgba(10,10,12,0.85) 100%)',
+            'radial-gradient(ellipse 55% 45% at 50% 48%, rgba(10,10,12,0.55) 0%, rgba(10,10,12,0.92) 100%)',
         }}
       />
 

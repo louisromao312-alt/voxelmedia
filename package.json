@@ -3,9 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --webpack -p 3000",
+    "dev:clean": "rm -rf .next && next dev --webpack -p 3000",
+    "fix": "rm -rf .next node_modules && npm install",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 3000",
     "lint": "eslint"
   },
   "dependencies": {

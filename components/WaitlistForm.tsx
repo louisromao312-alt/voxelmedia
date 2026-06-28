@@ -3,6 +3,7 @@
 import { useRef, useState, useId, useEffect } from 'react'
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion'
 import { CheckCircle, ArrowRight, Loader2 } from 'lucide-react'
+import WaitlistBlockBg from '@/components/WaitlistBlockBg'
 import SectionReveal, { EASE } from '@/components/SectionReveal'
 import { useUserJourney } from '@/context/UserJourneyContext'
 
@@ -49,10 +50,11 @@ export default function WaitlistForm({ id }: { id?: string }) {
   return (
     <SectionReveal
       id={id}
-      className="relative px-4 py-24 md:py-32 bg-[#0A0A0C]"
+      className="relative px-4 py-24 md:py-32 bg-[#0A0A0C] overflow-hidden"
       aria-labelledby="waitlist-heading"
     >
-      <div className="max-w-2xl mx-auto">
+      <WaitlistBlockBg />
+      <div className="relative z-10 max-w-2xl mx-auto">
         <div className="text-center mb-10">
           <p className="text-xs font-mono text-zinc-500 uppercase tracking-widest mb-3">
             Early Access

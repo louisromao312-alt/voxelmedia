@@ -6,6 +6,7 @@ import SectionReveal, { EASE } from '@/components/SectionReveal'
 import { RoleBadge } from '@/components/JourneySelector'
 import { useUserJourney } from '@/context/UserJourneyContext'
 import { useCountUp } from '@/components/useCountUp'
+import { useBurst } from '@/context/BlockBurstContext'
 
 const METRICS = [
   {
@@ -45,17 +46,19 @@ function MetricCard({
   inView,
   highlighted,
   role,
+  onBurst,
 }: (typeof METRICS)[number] & {
   index: number
   inView: boolean
   highlighted: boolean
   role: string | null
+  onBurst: (x: number, y: number) => void
 }) {
   const count = useCountUp(value, inView, 1.6 + index * 0.15)
 
   return (
     <motion.div
-      className={`text-center p-6 rounded-xl border transition-all duration-500 ${
+      className={`text-center p-6 rounded-xl border transition-all duration-500 cursor-pointer select-none ${
         highlighted
           ? role === 'brand'
             ? 'border-blue-400/30 bg-blue-400/5 shadow-[0_0_30px_rgba(96,165,250,0.08)]'
@@ -65,6 +68,8 @@ function MetricCard({
       initial={{ opacity: 0, y: 20 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.6, delay: 0.15 + index * 0.1, ease: EASE }}
+      onPointerDown={(e) => onBurst(e.clientX, e.clientY)}
+      whileTap={{ scale: 0.95 }}
     >
       <p className="text-4xl sm:text-5xl font-bold text-white font-mono tabular-nums">
         {count}
@@ -120,6 +125,7 @@ export default function ArchitectsAdvantage() {
   const metricsInView = useInView(metricsRef, { once: true, amount: 0.4 })
   const calloutInView = useInView(calloutRef, { once: true, amount: 0.4 })
   const { role } = useUserJourney()
+  const { triggerBurst } = useBurst()
   const highlightedIndex = role === 'creator' ? 1 : -1
   const highlightCallout = role === 'brand'
 
@@ -167,6 +173,7 @@ export default function ArchitectsAdvantage() {
               inView={metricsInView}
               highlighted={i === highlightedIndex}
               role={role}
+              onBurst={triggerBurst}
             />
           ))}
         </div>
