@@ -146,8 +146,8 @@ function glowLevel(p: Vec3): BrainVoxel['glow'] {
   return 'none'
 }
 
-const STEP = 0.15
-export const BRAIN_BLOCK_SIZE = 27
+const STEP = 0.12
+export const BRAIN_BLOCK_SIZE = 22
 
 const X_RANGE = Math.ceil(3.3 / STEP)
 const Y_RANGE = Math.ceil(3.74 / STEP)

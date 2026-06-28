@@ -13,7 +13,7 @@ const BLOCK_COLORS: Record<
     side: '#22c55e',
     back: '#16a34a',
     bottom: '#15803d',
-    glow: '0 0 20px rgba(74,222,128,0.5)',
+    glow: '0 0 10px rgba(74,222,128,0.25)',
   },
   mid: {
     top: '#6ee7b7',
@@ -21,7 +21,7 @@ const BLOCK_COLORS: Record<
     side: '#10b981',
     back: '#059669',
     bottom: '#047857',
-    glow: '0 0 12px rgba(52,211,153,0.35)',
+    glow: '0 0 6px rgba(52,211,153,0.18)',
   },
   surface: {
     top: '#d4e4d4',
@@ -103,7 +103,7 @@ export default function VoxelBrain() {
           width: 'min(3200px, 280vw)',
           height: 'min(3200px, 260vh)',
           background:
-            'radial-gradient(ellipse 48% 52% at 50% 44%, rgba(74,222,128,0.28) 0%, rgba(74,222,128,0.12) 32%, rgba(74,222,128,0.05) 52%, transparent 72%)',
+            'radial-gradient(ellipse 48% 52% at 50% 44%, rgba(74,222,128,0.12) 0%, rgba(74,222,128,0.05) 32%, rgba(74,222,128,0.02) 52%, transparent 72%)',
           filter: 'blur(72px)',
         }}
       />
@@ -127,7 +127,7 @@ export default function VoxelBrain() {
               width: '55%',
               height: '55%',
               background:
-                'radial-gradient(circle, rgba(74,222,128,0.38) 0%, rgba(74,222,128,0.14) 40%, transparent 72%)',
+                'radial-gradient(circle, rgba(74,222,128,0.16) 0%, rgba(74,222,128,0.06) 40%, transparent 72%)',
               filter: 'blur(52px)',
             }}
           />

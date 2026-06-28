@@ -69,7 +69,7 @@ export default function VoxelIntelligence() {
         aria-hidden="true"
         style={{
           background:
-            'radial-gradient(ellipse 70% 90% at 50% 0%, rgba(74,222,128,0.1) 0%, rgba(74,222,128,0.04) 45%, transparent 75%)',
+            'radial-gradient(ellipse 70% 90% at 50% 0%, rgba(74,222,128,0.04) 0%, rgba(74,222,128,0.015) 45%, transparent 75%)',
         }}
       />
 
