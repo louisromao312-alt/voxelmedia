@@ -77,7 +77,6 @@ body {
 .voxel-brain-rotate {
   animation: voxel-brain-rotate 36s linear infinite;
   transform-style: preserve-3d;
-  will-change: transform;
   backface-visibility: hidden;
 }
 
