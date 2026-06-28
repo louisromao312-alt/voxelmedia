@@ -5,64 +5,64 @@ import { generateBrainVoxels, BRAIN_BLOCK_SIZE, type BrainVoxel } from '@/lib/vo
 
 const GLOW_STYLES: Record<
   BrainVoxel['glow'],
-  { face: string; glow?: string }
+  { top: string; side: string; glow?: string }
 > = {
   core: {
-    face: 'rgba(74,222,128,0.4)',
-    glow: '0 0 16px rgba(74,222,128,0.4)',
+    top: 'rgba(74,222,128,0.82)',
+    side: 'rgba(74,222,128,0.55)',
+    glow: '0 0 20px rgba(74,222,128,0.55)',
   },
   mid: {
-    face: 'rgba(74,222,128,0.18)',
-    glow: '0 0 8px rgba(74,222,128,0.18)',
+    top: 'rgba(74,222,128,0.52)',
+    side: 'rgba(74,222,128,0.38)',
+    glow: '0 0 12px rgba(74,222,128,0.3)',
   },
   surface: {
-    face: 'rgba(255,255,255,0.075)',
+    top: 'rgba(200,230,210,0.38)',
+    side: 'rgba(180,210,190,0.28)',
   },
   none: {
-    face: 'rgba(255,255,255,0.05)',
+    top: 'rgba(190,205,195,0.32)',
+    side: 'rgba(170,185,175,0.24)',
   },
 }
 
 function VoxelCube({ v, size }: { v: BrainVoxel; size: number }) {
   const s = GLOW_STYLES[v.glow]
   const h = size / 2
-
-  const face = (shade: number) =>
-    v.glow === 'core' || v.glow === 'mid'
-      ? `rgba(74,222,128,${shade})`
-      : `rgba(255,255,255,${shade})`
+  const isGreen = v.glow === 'core' || v.glow === 'mid'
 
   const faces = [
     {
       name: 'front',
-      bg: face(0.07),
+      bg: isGreen ? 'rgba(74,222,128,0.42)' : s.side,
       transform: `rotateY(0deg) translateZ(${h}px)`,
       shadow: s.glow,
     },
     {
       name: 'back',
-      bg: face(0.04),
+      bg: isGreen ? 'rgba(74,222,128,0.32)' : 'rgba(150,170,160,0.22)',
       transform: `rotateY(180deg) translateZ(${h}px)`,
     },
     {
       name: 'right',
-      bg: face(0.05),
+      bg: isGreen ? 'rgba(74,222,128,0.36)' : s.side,
       transform: `rotateY(90deg) translateZ(${h}px)`,
     },
     {
       name: 'left',
-      bg: face(0.04),
+      bg: isGreen ? 'rgba(74,222,128,0.3)' : 'rgba(150,170,160,0.2)',
       transform: `rotateY(-90deg) translateZ(${h}px)`,
     },
     {
       name: 'top',
-      bg: s.face,
+      bg: s.top,
       transform: `rotateX(90deg) translateZ(${h}px)`,
       shadow: s.glow,
     },
     {
       name: 'bottom',
-      bg: face(0.03),
+      bg: isGreen ? 'rgba(74,222,128,0.28)' : 'rgba(130,145,135,0.18)',
       transform: `rotateX(-90deg) translateZ(${h}px)`,
     },
   ] as const
@@ -128,7 +128,7 @@ export default function VoxelBrain() {
             width: '46%',
             height: '46%',
             background:
-              'radial-gradient(circle, rgba(74,222,128,0.26) 0%, rgba(74,222,128,0.09) 38%, transparent 70%)',
+              'radial-gradient(circle, rgba(74,222,128,0.34) 0%, rgba(74,222,128,0.12) 38%, transparent 70%)',
             filter: 'blur(44px)',
           }}
         />
@@ -150,14 +150,14 @@ export default function VoxelBrain() {
         className="absolute inset-0"
         style={{
           background:
-            'radial-gradient(ellipse 82% 76% at 50% 48%, transparent 0%, rgba(10,10,12,0.32) 64%, rgba(10,10,12,0.92) 100%)',
+            'radial-gradient(ellipse 82% 76% at 50% 48%, transparent 0%, rgba(10,10,12,0.18) 64%, rgba(10,10,12,0.78) 100%)',
         }}
       />
       <div
         className="absolute inset-0"
         style={{
           background:
-            'radial-gradient(circle at 50% 50%, rgba(74,222,128,0.1) 0%, transparent 54%)',
+            'radial-gradient(circle at 50% 50%, rgba(74,222,128,0.14) 0%, transparent 58%)',
         }}
       />
     </div>

@@ -1,7 +1,9 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
 import { VoxelCube } from '@/components/VoxelBlock'
+import { EASE } from '@/components/SectionReveal'
 
 function seeded(i: number, salt = 0) {
   const x = Math.sin(i * 127.1 + salt * 311.7) * 43758.5453
@@ -57,22 +59,30 @@ export default function WaitlistBlockBg() {
       aria-hidden="true"
     >
       {FLOOR_BLOCKS.map((b, i) => (
-        <div
+        <motion.div
           key={i}
-          className="absolute"
+          className="absolute pointer-events-auto"
           style={{
             left: b.left,
             bottom: b.bottom,
-            transform: 'translateX(-50%)',
           }}
+          initial={{ x: '-50%', opacity: b.opacity }}
+          animate={{ x: '-50%', opacity: b.opacity }}
+          whileHover={{
+            x: '-50%',
+            y: -7,
+            scale: 1.05,
+            opacity: Math.min(b.opacity + 0.22, 1),
+          }}
+          transition={{ duration: 0.25, ease: EASE }}
         >
           <VoxelCube
             size={b.size}
             rotate={b.rotate}
             tilt={b.tilt}
-            opacity={b.opacity}
+            hoverable
           />
-        </div>
+        </motion.div>
       ))}
     </div>
   )

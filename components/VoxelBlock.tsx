@@ -39,6 +39,7 @@ type VoxelCubeProps = {
   rotate?: number
   tilt?: number
   opacity?: number
+  hoverable?: boolean
   className?: string
   style?: CSSProperties
 }
@@ -49,6 +50,7 @@ export function VoxelCube({
   rotate = 0,
   tilt = 58,
   opacity = 1,
+  hoverable = false,
   className = '',
   style,
 }: VoxelCubeProps) {
@@ -57,7 +59,7 @@ export function VoxelCube({
 
   return (
     <div
-      className={className}
+      className={`${hoverable ? 'group' : ''} ${className}`.trim()}
       style={{
         width: s,
         height: s + depth,
@@ -78,6 +80,11 @@ export function VoxelCube({
       >
         {/* top */}
         <div
+          className={
+            hoverable
+              ? 'transition-[background,border-color,box-shadow] duration-300 group-hover:bg-[rgba(74,222,128,0.14)] group-hover:border-[rgba(74,222,128,0.32)] group-hover:shadow-[0_0_14px_rgba(74,222,128,0.18)]'
+              : undefined
+          }
           style={{
             position: 'absolute',
             inset: 0,
