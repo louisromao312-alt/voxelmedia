@@ -8,34 +8,34 @@ const BLOCK_COLORS: Record<
   { top: string; front: string; side: string; back: string; bottom: string; glow?: string }
 > = {
   core: {
-    top: '#86efac',
-    front: '#4ade80',
-    side: '#22c55e',
-    back: '#16a34a',
-    bottom: '#15803d',
-    glow: '0 0 10px rgba(74,222,128,0.25)',
+    top: 'rgba(134,239,172,0.42)',
+    front: 'rgba(74,222,128,0.32)',
+    side: 'rgba(34,197,94,0.26)',
+    back: 'rgba(22,163,74,0.2)',
+    bottom: 'rgba(21,128,61,0.16)',
+    glow: '0 0 4px rgba(74,222,128,0.06)',
   },
   mid: {
-    top: '#6ee7b7',
-    front: '#34d399',
-    side: '#10b981',
-    back: '#059669',
-    bottom: '#047857',
-    glow: '0 0 6px rgba(52,211,153,0.18)',
+    top: 'rgba(110,231,183,0.28)',
+    front: 'rgba(52,211,153,0.22)',
+    side: 'rgba(16,185,129,0.18)',
+    back: 'rgba(5,150,105,0.14)',
+    bottom: 'rgba(4,120,87,0.1)',
+    glow: '0 0 3px rgba(52,211,153,0.04)',
   },
   surface: {
-    top: '#d4e4d4',
-    front: '#b8ccb8',
-    side: '#9cb09c',
-    back: '#849884',
-    bottom: '#708070',
+    top: 'rgba(212,228,212,0.18)',
+    front: 'rgba(184,204,184,0.14)',
+    side: 'rgba(156,176,156,0.11)',
+    back: 'rgba(132,152,132,0.09)',
+    bottom: 'rgba(112,128,112,0.07)',
   },
   none: {
-    top: '#c4d0c4',
-    front: '#a8b4a8',
-    side: '#8c988c',
-    back: '#788878',
-    bottom: '#647064',
+    top: 'rgba(196,208,196,0.14)',
+    front: 'rgba(168,180,168,0.11)',
+    side: 'rgba(140,152,140,0.09)',
+    back: 'rgba(120,136,120,0.07)',
+    bottom: 'rgba(100,112,100,0.06)',
   },
 }
 
@@ -103,7 +103,7 @@ export default function VoxelBrain() {
           width: 'min(3200px, 280vw)',
           height: 'min(3200px, 260vh)',
           background:
-            'radial-gradient(ellipse 48% 52% at 50% 44%, rgba(74,222,128,0.12) 0%, rgba(74,222,128,0.05) 32%, rgba(74,222,128,0.02) 52%, transparent 72%)',
+            'radial-gradient(ellipse 48% 52% at 50% 44%, rgba(74,222,128,0.035) 0%, rgba(74,222,128,0.012) 32%, transparent 52%)',
           filter: 'blur(72px)',
         }}
       />
@@ -111,6 +111,7 @@ export default function VoxelBrain() {
       <div
         className="pointer-events-none absolute inset-x-0 -top-[12vh] -bottom-[45vh] z-[1] flex items-center justify-center overflow-visible"
         aria-hidden="true"
+        style={{ opacity: 0.62 }}
       >
         <div
           className="relative flex items-center justify-center"
@@ -127,7 +128,7 @@ export default function VoxelBrain() {
               width: '55%',
               height: '55%',
               background:
-                'radial-gradient(circle, rgba(74,222,128,0.16) 0%, rgba(74,222,128,0.06) 40%, transparent 72%)',
+                'radial-gradient(circle, rgba(74,222,128,0.05) 0%, rgba(74,222,128,0.02) 40%, transparent 72%)',
               filter: 'blur(52px)',
             }}
           />
@@ -150,7 +151,7 @@ export default function VoxelBrain() {
           className="absolute inset-0"
           style={{
             background:
-              'radial-gradient(ellipse 88% 80% at 50% 46%, transparent 0%, rgba(10,10,12,0.12) 68%, rgba(10,10,12,0.45) 100%)',
+              'radial-gradient(ellipse 88% 80% at 50% 46%, transparent 0%, rgba(10,10,12,0.22) 55%, rgba(10,10,12,0.62) 100%)',
             maskImage: 'linear-gradient(to bottom, black 0%, black 72%, transparent 100%)',
             WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 72%, transparent 100%)',
           }}
