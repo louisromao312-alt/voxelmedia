@@ -108,7 +108,7 @@ export default function VoxelBrain() {
             width: 'min(2200px, 200vw)',
             height: 'min(2000px, 190vw)',
             perspective: 1800,
-            transform: 'translateY(-40px)',
+            transform: 'translateY(-120px)',
           }}
         >
           <div className="voxel-brain-rotate" style={{ transformStyle: 'preserve-3d' }}>
