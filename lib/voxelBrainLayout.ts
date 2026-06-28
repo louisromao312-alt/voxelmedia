@@ -24,14 +24,10 @@ function isInBrain(nx: number, ny: number, nz: number): boolean {
     hz < 0.05
 
   if (cerebellum) return true
-
   if (dist > 1) return false
-
-  if (Math.abs(nx) < 0.045 && hy > -0.15) return false
-
+  if (Math.abs(nx) < 0.05 && hy > -0.15) return false
   if (hy < -0.68) return false
-
-  if (hy < -0.38 && dist > 0.62 && !cerebellum) return false
+  if (hy < -0.38 && dist > 0.62) return false
 
   if (
     hy > -0.28 &&
@@ -45,23 +41,15 @@ function isInBrain(nx: number, ny: number, nz: number): boolean {
   }
 
   if (hz > 0.38 && hy < 0.15 && Math.abs(hx) > 0.18) return false
-
-  const frontalBulge = hz > 0.2 && hy > -0.05
-  if (frontalBulge && dist > 0.88) return false
-
+  if (hz > 0.2 && hy > -0.05 && dist > 0.88) return false
   if (dist > 0.94) return false
 
-  const onSurface = dist > 0.72
-  if (onSurface) {
+  if (dist > 0.72) {
     const sulcus =
-      Math.sin(hx * 14 + hy * 2) *
-      Math.cos(hz * 11 - hy * 3) *
-      Math.sin(hy * 9 + hz * 4)
-    if (sulcus > 0.38) return false
-
-    const secondary =
-      Math.cos(hx * 9 - 1.2) * Math.sin(nz * 13 + 0.5) * Math.cos(hy * 7)
-    if (secondary > 0.42 && Math.abs(hx) > 0.2) return false
+      Math.sin(hx * 10 + hy * 2) *
+      Math.cos(hz * 8 - hy * 3) *
+      Math.sin(hy * 7 + hz * 3)
+    if (sulcus > 0.4) return false
   }
 
   return true
@@ -74,21 +62,21 @@ function glowLevel(
   dist: number,
 ): BrainVoxel['glow'] {
   const core = hx * hx * 1.1 + hy * hy + hz * hz
-  if (core < 0.12) return 'core'
-  if (core < 0.28) return 'mid'
+  if (core < 0.14) return 'core'
+  if (core < 0.32) return 'mid'
   if (dist > 0.68) return 'surface'
   return 'none'
 }
 
-/** Low-poly voxel brain — dual hemispheres, fissures, cerebellum, sulci */
+/** Coarse low-poly brain — fewer voxels for performance */
 export function generateBrainVoxels(): BrainVoxel[] {
   const voxels: BrainVoxel[] = []
-  const step = 0.13
-  const scale = 13.5
+  const step = 0.28
+  const scale = 42
 
-  for (let xi = -20; xi <= 20; xi++) {
-    for (let yi = -18; yi <= 20; yi++) {
-      for (let zi = -16; zi <= 16; zi++) {
+  for (let xi = -13; xi <= 13; xi++) {
+    for (let yi = -11; yi <= 13; yi++) {
+      for (let zi = -10; zi <= 10; zi++) {
         const nx = xi * step
         const ny = yi * step
         const nz = zi * step

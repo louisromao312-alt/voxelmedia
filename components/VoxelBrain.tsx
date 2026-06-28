@@ -5,36 +5,40 @@ import { generateBrainVoxels, type BrainVoxel } from '@/lib/voxelBrainLayout'
 
 const GLOW_STYLES: Record<
   BrainVoxel['glow'],
-  { bg: string; border: string; shadow: string }
+  { top: string; front: string; side: string; border: string; glow?: string }
 > = {
   core: {
-    bg: 'rgba(74,222,128,0.38)',
-    border: '1px solid rgba(74,222,128,0.65)',
-    shadow:
-      '0 0 18px rgba(74,222,128,0.55), 0 0 32px rgba(74,222,128,0.2), inset 0 0 8px rgba(74,222,128,0.35)',
+    top: 'rgba(74,222,128,0.42)',
+    front: 'rgba(74,222,128,0.2)',
+    side: 'rgba(74,222,128,0.14)',
+    border: 'rgba(74,222,128,0.55)',
+    glow: '0 0 20px rgba(74,222,128,0.45)',
   },
   mid: {
-    bg: 'rgba(74,222,128,0.18)',
-    border: '1px solid rgba(74,222,128,0.42)',
-    shadow:
-      '0 0 12px rgba(74,222,128,0.3), inset 0 1px 0 rgba(255,255,255,0.1)',
+    top: 'rgba(74,222,128,0.2)',
+    front: 'rgba(74,222,128,0.1)',
+    side: 'rgba(74,222,128,0.07)',
+    border: 'rgba(74,222,128,0.35)',
+    glow: '0 0 10px rgba(74,222,128,0.2)',
   },
   surface: {
-    bg: 'rgba(255,255,255,0.07)',
-    border: '1px solid rgba(255,255,255,0.14)',
-    shadow: 'inset 0 1px 0 rgba(255,255,255,0.08)',
+    top: 'rgba(255,255,255,0.08)',
+    front: 'rgba(255,255,255,0.04)',
+    side: 'rgba(255,255,255,0.03)',
+    border: 'rgba(255,255,255,0.14)',
   },
   none: {
-    bg: 'rgba(255,255,255,0.045)',
-    border: '1px solid rgba(255,255,255,0.1)',
-    shadow: 'inset 0 1px 0 rgba(255,255,255,0.05)',
+    top: 'rgba(255,255,255,0.055)',
+    front: 'rgba(255,255,255,0.03)',
+    side: 'rgba(255,255,255,0.02)',
+    border: 'rgba(255,255,255,0.1)',
   },
 }
 
-function VoxelCell({ v, size }: { v: BrainVoxel; size: number }) {
-  const style = GLOW_STYLES[v.glow]
+function VoxelCube({ v, size }: { v: BrainVoxel; size: number }) {
+  const s = GLOW_STYLES[v.glow]
+  const d = size * 0.4
   const half = size / 2
-  const depth = size * 0.35
 
   return (
     <div
@@ -46,6 +50,7 @@ function VoxelCell({ v, size }: { v: BrainVoxel; size: number }) {
         top: -half,
         transform: `translate3d(${v.x}px, ${v.y}px, ${v.z}px)`,
         transformStyle: 'preserve-3d',
+        willChange: 'transform',
       }}
     >
       <div
@@ -60,42 +65,42 @@ function VoxelCell({ v, size }: { v: BrainVoxel; size: number }) {
           style={{
             position: 'absolute',
             inset: 0,
-            borderRadius: 2,
-            background: style.bg,
-            border: style.border,
-            boxShadow: style.shadow,
-            transform: `translateZ(${depth}px)`,
+            borderRadius: 3,
+            background: s.top,
+            border: `1px solid ${s.border}`,
+            boxShadow: s.glow,
+            transform: `translateZ(${d}px)`,
+            backfaceVisibility: 'hidden',
           }}
         />
         <div
           style={{
             position: 'absolute',
             width: size,
-            height: depth,
+            height: d,
             bottom: 0,
             left: 0,
-            background:
-              v.glow === 'core' || v.glow === 'mid'
-                ? 'rgba(74,222,128,0.12)'
-                : 'rgba(255,255,255,0.03)',
-            border: '1px solid rgba(255,255,255,0.06)',
+            borderRadius: 2,
+            background: s.front,
+            border: `1px solid ${s.border}`,
             transformOrigin: 'bottom',
             transform: 'rotateX(-90deg)',
-            borderRadius: 1,
+            backfaceVisibility: 'hidden',
           }}
         />
         <div
           style={{
             position: 'absolute',
-            width: depth,
+            width: d,
             height: size,
             top: 0,
             right: 0,
-            background: 'rgba(255,255,255,0.025)',
-            border: '1px solid rgba(255,255,255,0.05)',
+            borderRadius: 2,
+            background: s.side,
+            border: `1px solid ${s.border}`,
             transformOrigin: 'right',
             transform: 'rotateY(90deg)',
-            borderRadius: 1,
+            backfaceVisibility: 'hidden',
           }}
         />
       </div>
@@ -105,7 +110,7 @@ function VoxelCell({ v, size }: { v: BrainVoxel; size: number }) {
 
 export default function VoxelBrain() {
   const voxels = useMemo(() => generateBrainVoxels(), [])
-  const voxelSize = 11
+  const blockSize = 22
 
   return (
     <div
@@ -115,28 +120,32 @@ export default function VoxelBrain() {
       <div
         className="relative flex items-center justify-center"
         style={{
-          width: 'min(1100px, 150vw)',
-          height: 'min(1000px, 115vw)',
-          perspective: 1400,
+          width: 'min(2200px, 200vw)',
+          height: 'min(2000px, 190vw)',
+          perspective: 1600,
+          contain: 'layout style',
         }}
       >
         <div
           className="pointer-events-none absolute rounded-full"
           style={{
-            width: '42%',
-            height: '42%',
+            width: '48%',
+            height: '48%',
             background:
-              'radial-gradient(circle, rgba(74,222,128,0.22) 0%, rgba(74,222,128,0.08) 35%, transparent 70%)',
-            filter: 'blur(28px)',
+              'radial-gradient(circle, rgba(74,222,128,0.24) 0%, rgba(74,222,128,0.08) 40%, transparent 72%)',
+            filter: 'blur(40px)',
           }}
         />
 
         <div
           className="voxel-brain-rotate"
-          style={{ transformStyle: 'preserve-3d' }}
+          style={{
+            transformStyle: 'preserve-3d',
+            willChange: 'transform',
+          }}
         >
           {voxels.map((v, i) => (
-            <VoxelCell key={i} v={v} size={voxelSize} />
+            <VoxelCube key={i} v={v} size={blockSize} />
           ))}
         </div>
       </div>
@@ -145,14 +154,14 @@ export default function VoxelBrain() {
         className="absolute inset-0"
         style={{
           background:
-            'radial-gradient(ellipse 78% 72% at 50% 48%, transparent 0%, rgba(10,10,12,0.35) 62%, rgba(10,10,12,0.9) 100%)',
+            'radial-gradient(ellipse 82% 76% at 50% 48%, transparent 0%, rgba(10,10,12,0.32) 64%, rgba(10,10,12,0.92) 100%)',
         }}
       />
       <div
         className="absolute inset-0"
         style={{
           background:
-            'radial-gradient(circle at 50% 50%, rgba(74,222,128,0.09) 0%, transparent 52%)',
+            'radial-gradient(circle at 50% 50%, rgba(74,222,128,0.1) 0%, transparent 54%)',
         }}
       />
     </div>

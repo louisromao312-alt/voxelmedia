@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { LucideIcon } from 'lucide-react'
 import { EASE } from '@/components/SectionReveal'
@@ -20,6 +20,8 @@ type ChartDetail = {
   sparkline: string
   stats: { label: string; value: string }[]
 }
+
+type ExpandStage = 'idle' | 'slideLeft' | 'slideUp' | 'expandRight' | 'closing'
 
 const CHART_DETAILS: Record<string, ChartDetail> = {
   'Trend Velocity': {
@@ -53,6 +55,9 @@ const CHART_DETAILS: Record<string, ChartDetail> = {
     ],
   },
 }
+
+const CARD_H = 152
+const STAGE_MS = 340
 
 function MiniBarChart({
   bars,
@@ -108,51 +113,27 @@ function DetailSparkline({
   )
 }
 
-function CollapsedCard({
+function MetricCardContent({
   chart,
-  index,
-  inView,
-  highlighted,
-  role,
-  dimmed,
-  onEnter,
+  accent,
 }: {
   chart: ChartConfig
-  index: number
-  inView: boolean
-  highlighted: boolean
-  role: string | null
-  dimmed: boolean
-  onEnter: () => void
+  accent?: boolean
 }) {
   const Icon = chart.icon
-
   return (
-    <motion.button
-      type="button"
-      className={`w-full h-full min-h-[152px] p-5 text-left bg-[#0A0A0C] outline-none transition-colors ${
-        highlighted
-          ? role === 'brand'
-            ? 'ring-1 ring-inset ring-blue-400/25 bg-blue-400/[0.03]'
-            : 'ring-1 ring-inset ring-green-400/25 bg-green-400/[0.03]'
-          : 'ring-1 ring-inset ring-transparent hover:ring-white/10'
-      }`}
-      initial={{ opacity: 0, y: 12 }}
-      animate={{
-        opacity: dimmed ? 0.25 : inView ? 1 : 0,
-        y: inView ? 0 : 12,
-      }}
-      transition={{
-        opacity: { duration: 0.35, ease: EASE },
-        y: { duration: 0.5, delay: 0.35 + index * 0.08, ease: EASE },
-      }}
-      onMouseEnter={onEnter}
-      onFocus={onEnter}
-      aria-label={`${chart.label} — ${chart.metric}`}
-    >
+    <>
       <div className="flex items-center gap-2 mb-1">
-        <Icon size={14} className="text-zinc-500" aria-hidden="true" />
-        <span className="font-mono text-[10px] text-zinc-500 uppercase tracking-widest">
+        <Icon
+          size={14}
+          className={accent ? '' : 'text-zinc-500'}
+          style={accent ? { color: chart.color } : undefined}
+          aria-hidden="true"
+        />
+        <span
+          className="font-mono text-[10px] uppercase tracking-widest"
+          style={{ color: accent ? chart.color : '#71717a' }}
+        >
           {chart.label}
         </span>
       </div>
@@ -160,89 +141,174 @@ function CollapsedCard({
         {chart.metric}
       </p>
       <p className="text-[10px] text-zinc-600 font-mono">{chart.sub}</p>
-      <MiniBarChart bars={chart.bars} color={chart.color} show={inView} />
+      <MiniBarChart bars={chart.bars} color={chart.color} show />
+    </>
+  )
+}
+
+function CollapsedCard({
+  chart,
+  index,
+  inView,
+  highlighted,
+  role,
+  dimmed,
+  active,
+  onClick,
+}: {
+  chart: ChartConfig
+  index: number
+  inView: boolean
+  highlighted: boolean
+  role: string | null
+  dimmed: boolean
+  active: boolean
+  onClick: () => void
+}) {
+  return (
+    <motion.button
+      type="button"
+      className={`w-full p-5 text-left bg-[#0A0A0C] outline-none ${
+        highlighted
+          ? role === 'brand'
+            ? 'ring-1 ring-inset ring-blue-400/25 bg-blue-400/[0.03]'
+            : 'ring-1 ring-inset ring-green-400/25 bg-green-400/[0.03]'
+          : active
+            ? 'ring-1 ring-inset ring-white/20'
+            : 'ring-1 ring-inset ring-transparent hover:ring-white/10'
+      }`}
+      style={{ height: CARD_H }}
+      initial={{ opacity: 0, y: 12 }}
+      animate={{
+        opacity: dimmed ? 0.22 : inView ? 1 : 0,
+        y: inView ? 0 : 12,
+      }}
+      transition={{
+        opacity: { duration: 0.35, ease: EASE },
+        y: { duration: 0.5, delay: 0.35 + index * 0.08, ease: EASE },
+      }}
+      onClick={onClick}
+      aria-expanded={active}
+      aria-label={`${chart.label} — ${chart.metric}. Click to expand.`}
+    >
+      <MetricCardContent chart={chart} accent={active} />
     </motion.button>
   )
 }
 
-function ExpandedCard({
+function ExpandedModule({
   chart,
   index,
+  count,
+  stage,
 }: {
   chart: ChartConfig
   index: number
+  count: number
+  stage: ExpandStage
 }) {
-  const Icon = chart.icon
   const detail = CHART_DETAILS[chart.label]
   const sparkId = `metric-spark-expanded-${index}`
+  const colW = 100 / count
+  const startLeft = index * colW
+
+  const showDetail = stage === 'expandRight'
+  const moduleLeft = stage === 'idle' || stage === 'closing' ? startLeft : 0
+  const moduleWidth = stage === 'expandRight' ? 100 : colW
+  const moduleY =
+    stage === 'slideUp' || stage === 'expandRight'
+      ? -92
+      : stage === 'closing'
+        ? 0
+        : 0
 
   return (
     <motion.div
-      className="mx-0 overflow-hidden border border-white/[0.1] bg-[#0A0A0C] shadow-[0_28px_64px_rgba(0,0,0,0.55)]"
-      style={{ borderColor: `${chart.color}35` }}
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 10 }}
-      transition={{ duration: 0.38, ease: EASE }}
+      className="absolute z-40 overflow-hidden border bg-[#0A0A0C] shadow-[0_24px_56px_rgba(0,0,0,0.55)]"
+      style={{
+        borderColor: `${chart.color}35`,
+        height: CARD_H,
+        bottom: 0,
+      }}
+      initial={{
+        left: `${startLeft}%`,
+        width: `${colW}%`,
+        y: 0,
+        opacity: 0,
+      }}
+      animate={{
+        left: `${moduleLeft}%`,
+        width: `${moduleWidth}%`,
+        y: moduleY,
+        opacity: stage === 'closing' ? 0 : 1,
+      }}
+      exit={{
+        left: `${startLeft}%`,
+        width: `${colW}%`,
+        y: 0,
+        opacity: 0,
+      }}
+      transition={{ duration: STAGE_MS / 1000, ease: EASE }}
     >
-      <div className="flex flex-col sm:flex-row">
-        <div className="shrink-0 border-b sm:border-b-0 sm:border-r border-white/[0.07] p-5 sm:w-[38%] sm:min-w-[200px]">
-          <div className="flex items-center gap-2 mb-1">
-            <Icon size={14} style={{ color: chart.color }} aria-hidden="true" />
-            <span
-              className="font-mono text-[10px] uppercase tracking-widest"
-              style={{ color: chart.color }}
-            >
-              {chart.label}
-            </span>
-          </div>
-          <p className="text-2xl font-bold text-white font-mono tabular-nums">
-            {chart.metric}
-          </p>
-          <p className="text-[10px] text-zinc-600 font-mono">{chart.sub}</p>
-          <MiniBarChart bars={chart.bars} color={chart.color} show />
+      <div className="flex h-full">
+        <div
+          className="shrink-0 p-5 border-r border-white/[0.07]"
+          style={{ width: showDetail ? '36%' : '100%', minWidth: 200 }}
+        >
+          <MetricCardContent chart={chart} accent />
         </div>
 
-        {detail && (
-          <motion.div
-            className="flex-1 p-5"
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.38, delay: 0.06, ease: EASE }}
-          >
-            <p
-              className="font-mono text-[9px] uppercase tracking-widest mb-2"
-              style={{ color: chart.color }}
-            >
-              {chart.label} · deep read
-            </p>
-            <p className="text-sm font-semibold text-white leading-snug">
-              {detail.headline}
-            </p>
-            <p className="mt-1.5 text-[11px] leading-relaxed text-zinc-400">
-              {detail.body}
-            </p>
-            <div className="mt-3 rounded-md border border-white/[0.06] bg-white/[0.02] p-2.5">
-              <DetailSparkline path={detail.sparkline} color={chart.color} id={sparkId} />
-            </div>
-            <div className="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-2">
-              {detail.stats.map((stat) => (
-                <div
-                  key={stat.label}
-                  className="rounded-md border border-white/[0.05] bg-white/[0.02] px-2.5 py-2"
-                >
-                  <p className="text-[9px] text-zinc-500">{stat.label}</p>
-                  <p
-                    className="mt-0.5 font-mono text-[11px] font-semibold tabular-nums"
-                    style={{ color: chart.color }}
+        <motion.div
+          className="overflow-hidden h-full"
+          initial={false}
+          animate={{
+            width: showDetail ? '64%' : 0,
+            opacity: showDetail ? 1 : 0,
+          }}
+          transition={{ duration: STAGE_MS / 1000, ease: EASE }}
+        >
+          {detail && (
+            <div className="h-full overflow-y-auto p-5">
+              <p
+                className="font-mono text-[9px] uppercase tracking-widest mb-2"
+                style={{ color: chart.color }}
+              >
+                {chart.label} · deep read
+              </p>
+              <p className="text-sm font-semibold text-white leading-snug">
+                {detail.headline}
+              </p>
+              <p className="mt-1.5 text-[11px] leading-relaxed text-zinc-400 line-clamp-3">
+                {detail.body}
+              </p>
+              <div className="mt-3 rounded-md border border-white/[0.06] bg-white/[0.02] p-2.5">
+                <DetailSparkline
+                  path={detail.sparkline}
+                  color={chart.color}
+                  id={sparkId}
+                />
+              </div>
+              <div className="mt-3 grid grid-cols-3 gap-1.5">
+                {detail.stats.map((stat) => (
+                  <div
+                    key={stat.label}
+                    className="rounded-md border border-white/[0.05] bg-white/[0.02] px-2 py-1.5"
                   >
-                    {stat.value}
-                  </p>
-                </div>
-              ))}
+                    <p className="text-[8px] text-zinc-500 leading-tight">
+                      {stat.label}
+                    </p>
+                    <p
+                      className="mt-0.5 font-mono text-[10px] font-semibold tabular-nums"
+                      style={{ color: chart.color }}
+                    >
+                      {stat.value}
+                    </p>
+                  </div>
+                ))}
+              </div>
             </div>
-          </motion.div>
-        )}
+          )}
+        </motion.div>
       </div>
     </motion.div>
   )
@@ -261,60 +327,94 @@ export default function TerminalMetricsStrip({
   role: string | null
   onExpandChange: (expanded: boolean) => void
 }) {
-  const [expandedIndex, setExpandedIndex] = useState<number | null>(null)
+  const [activeIndex, setActiveIndex] = useState<number | null>(null)
+  const [stage, setStage] = useState<ExpandStage>('idle')
 
-  const open = (index: number) => {
-    setExpandedIndex(index)
+  const close = useCallback(() => {
+    setStage('closing')
+    onExpandChange(false)
+  }, [onExpandChange])
+
+  const toggle = (index: number) => {
+    if (activeIndex === index && stage === 'expandRight') {
+      close()
+      return
+    }
+    setActiveIndex(index)
+    setStage('slideLeft')
     onExpandChange(true)
   }
 
-  const close = () => {
-    setExpandedIndex(null)
-    onExpandChange(false)
-  }
+  useEffect(() => {
+    if (stage === 'slideLeft') {
+      const t = window.setTimeout(() => setStage('slideUp'), STAGE_MS)
+      return () => window.clearTimeout(t)
+    }
+    if (stage === 'slideUp') {
+      const t = window.setTimeout(() => setStage('expandRight'), STAGE_MS)
+      return () => window.clearTimeout(t)
+    }
+    if (stage === 'closing') {
+      const t = window.setTimeout(() => {
+        setActiveIndex(null)
+        setStage('idle')
+      }, STAGE_MS)
+      return () => window.clearTimeout(t)
+    }
+  }, [stage])
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && activeIndex !== null) close()
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [activeIndex, close])
 
   return (
-    <div
-      className="relative border-t border-white/[0.06]"
-      onMouseLeave={(e) => {
-        const next = e.relatedTarget
-        if (!next || !e.currentTarget.contains(next as Node)) close()
-      }}
-    >
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-white/[0.06]">
+    <div className="relative border-t border-white/[0.06]">
+      <div
+        className="relative grid grid-cols-1 sm:grid-cols-3 gap-px bg-white/[0.06]"
+        style={{ minHeight: CARD_H }}
+      >
         {charts.map((chart, i) => (
-          <div key={chart.label} className="relative min-h-[152px] bg-[#0A0A0C]">
-            <CollapsedCard
-              chart={chart}
-              index={i}
-              inView={inView}
-              highlighted={i === highlightedChart}
-              role={role}
-              dimmed={expandedIndex !== null && expandedIndex !== i}
-              onEnter={() => open(i)}
-            />
+          <div
+            key={chart.label}
+            className="bg-[#0A0A0C]"
+            style={{ height: CARD_H }}
+          >
+            {activeIndex === i &&
+            (stage === 'slideLeft' ||
+              stage === 'slideUp' ||
+              stage === 'expandRight') ? (
+              <div style={{ height: CARD_H }} aria-hidden="true" />
+            ) : (
+              <CollapsedCard
+                chart={chart}
+                index={i}
+                inView={inView}
+                highlighted={i === highlightedChart}
+                role={role}
+                dimmed={activeIndex !== null && activeIndex !== i}
+                active={activeIndex === i && stage === 'expandRight'}
+                onClick={() => toggle(i)}
+              />
+            )}
           </div>
         ))}
-      </div>
 
-      <AnimatePresence>
-        {expandedIndex !== null && (
-          <motion.div
-            key={expandedIndex}
-            className="absolute left-0 right-0 z-40 px-0"
-            style={{ bottom: 'calc(100% - 2px)' }}
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 12, opacity: 0 }}
-            transition={{ duration: 0.4, ease: EASE }}
-          >
-            <ExpandedCard
-              chart={charts[expandedIndex]}
-              index={expandedIndex}
+        <AnimatePresence>
+          {activeIndex !== null && stage !== 'idle' && (
+            <ExpandedModule
+              key={activeIndex}
+              chart={charts[activeIndex]}
+              index={activeIndex}
+              count={charts.length}
+              stage={stage}
             />
-          </motion.div>
-        )}
-      </AnimatePresence>
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   )
 }
