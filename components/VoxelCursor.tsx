@@ -17,8 +17,6 @@ export default function VoxelCursor() {
     setIsTouch(coarse)
     if (coarse) return
 
-    document.body.classList.add('voxel-cursor-active')
-
     const onMove = (e: MouseEvent) => {
       mouseX.set(e.clientX)
       mouseY.set(e.clientY)
@@ -37,7 +35,6 @@ export default function VoxelCursor() {
     window.addEventListener('mouseup', onUp)
 
     return () => {
-      document.body.classList.remove('voxel-cursor-active')
       window.removeEventListener('mousemove', onMove)
       document.documentElement.removeEventListener('mouseleave', onLeave)
       document.documentElement.removeEventListener('mouseenter', onEnter)

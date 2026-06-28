@@ -1,18 +1,12 @@
 'use client'
 
 import { useRef } from 'react'
-import {
-  motion,
-  useInView,
-  useScroll,
-  useTransform,
-  type MotionValue,
-} from 'framer-motion'
+import { motion, useInView } from 'framer-motion'
 import { Shield, Zap, Users } from 'lucide-react'
 import SectionReveal, { EASE, revealTransition } from '@/components/SectionReveal'
+import TerminalMetricCard from '@/components/TerminalMetricCard'
 import { RoleBadge } from '@/components/JourneySelector'
 import { useUserJourney } from '@/context/UserJourneyContext'
-import TerminalDeepDive from '@/components/TerminalDeepDive'
 
 const TABLE_ROWS = [
   { platform: 'Minecraft', category: 'Realism Packs', momentum: '+24%', delta: '▲', signal: 'STRONG' },
@@ -49,38 +43,13 @@ const CHARTS = [
   },
 ]
 
-function MiniBarChart({
-  bars,
-  color,
-  animate,
-}: {
-  bars: number[]
-  color: string
-  animate: boolean
-}) {
-  return (
-    <div className="flex items-end gap-1 h-16 mt-4" aria-hidden="true">
-      {bars.map((h, i) => (
-        <motion.div
-          key={i}
-          className="flex-1 rounded-sm"
-          style={{ backgroundColor: color, opacity: 0.85 }}
-          initial={{ height: 0 }}
-          animate={animate ? { height: `${h}%` } : { height: 0 }}
-          transition={revealTransition(animate, 0.15, {
-            duration: 0.5,
-            index: i,
-            count: bars.length,
-            stagger: 0.06,
-          })}
-        />
-      ))}
-    </div>
-  )
-}
-
-function SectionHeader({ id }: { id: string }) {
+export default function VoxelIntelligence() {
+  const terminalRef = useRef<HTMLDivElement>(null)
+  const terminalInView = useInView(terminalRef, { once: false, amount: 0.2 })
   const { role } = useUserJourney()
+
+  const highlightedRow = role === 'creator' ? 0 : role === 'brand' ? 2 : -1
+  const highlightedChart = role === 'creator' ? 0 : role === 'brand' ? 1 : -1
 
   const sectionCopy =
     role === 'creator'
@@ -90,285 +59,144 @@ function SectionHeader({ id }: { id: string }) {
         : 'Bloomberg-grade market intelligence for the Minecraft creator economy — real-time signals, compliance scoring, and creator network depth.'
 
   return (
-    <div className="text-center mb-10 md:mb-12">
-      <div className="flex justify-center mb-3">
-        <RoleBadge />
-      </div>
-      <p className="text-xs font-mono text-zinc-500 uppercase tracking-widest mb-3">
-        Voxel Intelligence
-      </p>
-      <h2 id={id} className="text-3xl sm:text-4xl font-bold text-white">
-        The Terminal
-      </h2>
-      <motion.p
-        key={role ?? 'default'}
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.45, ease: EASE }}
-        className="mt-3 text-zinc-400 max-w-xl mx-auto text-sm sm:text-base px-4"
-      >
-        {sectionCopy}
-      </motion.p>
-    </div>
-  )
-}
-
-function TerminalWindow({
-  terminalRef,
-  terminalInView,
-  blurAmount,
-  deepDiveOpacity,
-}: {
-  terminalRef: React.RefObject<HTMLDivElement | null>
-  terminalInView: boolean
-  blurAmount?: MotionValue<string>
-  deepDiveOpacity?: MotionValue<number>
-}) {
-  const { role } = useUserJourney()
-  const highlightedRow = role === 'creator' ? 0 : role === 'brand' ? 2 : -1
-  const highlightedChart = role === 'creator' ? 0 : role === 'brand' ? 1 : -1
-
-  return (
-    <div
-      ref={terminalRef}
-      className="relative rounded-xl border border-white/[0.08] bg-[#0A0A0C] overflow-hidden shadow-[0_0_80px_rgba(0,0,0,0.6)]"
-    >
-      <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.06] bg-white/[0.02] relative z-10">
-        <div className="flex items-center gap-3">
-          <div className="flex gap-1.5" aria-hidden="true">
-            <span className="w-2.5 h-2.5 rounded-full bg-zinc-700" />
-            <span className="w-2.5 h-2.5 rounded-full bg-zinc-700" />
-            <span className="w-2.5 h-2.5 rounded-full bg-zinc-700" />
-          </div>
-          <span className="font-mono text-[11px] text-zinc-500 tracking-widest uppercase">
-            voxel://intelligence.terminal
-          </span>
-        </div>
-        <div
-          className="flex items-center gap-2 font-mono text-[10px] text-green-400 uppercase tracking-widest"
-          role="status"
-          aria-label="Live signal active"
-        >
-          <motion.span
-            className="relative flex h-2 w-2"
-            animate={{ scale: [1, 1.4, 1], opacity: [0.7, 1, 0.7] }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-          >
-            <span className="absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-60 animate-ping" />
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-green-400" />
-          </motion.span>
-          Live Signal
-        </div>
-      </div>
-
-      <motion.div style={blurAmount ? { filter: blurAmount } : undefined}>
-        <div className="overflow-x-auto">
-          <table className="w-full text-left font-mono text-xs">
-            <thead>
-              <tr className="border-b border-white/[0.06] text-zinc-500 uppercase tracking-wider">
-                <th className="px-4 py-3 font-medium" scope="col">Platform</th>
-                <th className="px-4 py-3 font-medium" scope="col">Category</th>
-                <th className="px-4 py-3 font-medium text-right" scope="col">Momentum</th>
-                <th className="px-4 py-3 font-medium text-center" scope="col">7d</th>
-                <th className="px-4 py-3 font-medium text-right" scope="col">Signal</th>
-              </tr>
-            </thead>
-            <tbody>
-              {TABLE_ROWS.map((row, i) => (
-                <motion.tr
-                  key={`${row.platform}-${row.category}`}
-                  className={`border-b border-white/[0.04] transition-colors ${
-                    i === highlightedRow
-                      ? role === 'brand'
-                        ? 'bg-blue-400/8 ring-1 ring-inset ring-blue-400/20'
-                        : 'bg-green-400/8 ring-1 ring-inset ring-green-400/20'
-                      : 'hover:bg-white/[0.02]'
-                  }`}
-                  initial={{ opacity: 0, x: -8 }}
-                  animate={terminalInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -8 }}
-                  transition={revealTransition(terminalInView, 0.1, {
-                    duration: 0.4,
-                    index: i,
-                    count: TABLE_ROWS.length,
-                    stagger: 0.07,
-                  })}
-                >
-                  <td className="px-4 py-3 text-zinc-300">{row.platform}</td>
-                  <td className="px-4 py-3 text-white">{row.category}</td>
-                  <td
-                    className={`px-4 py-3 text-right font-semibold ${
-                      row.momentum.startsWith('+') ? 'text-green-400' : 'text-red-400'
-                    }`}
-                  >
-                    {row.momentum}
-                  </td>
-                  <td
-                    className={`px-4 py-3 text-center ${
-                      row.delta === '▲' ? 'text-green-400' : 'text-red-400'
-                    }`}
-                    aria-hidden="true"
-                  >
-                    {row.delta}
-                  </td>
-                  <td className="px-4 py-3 text-right text-zinc-500">{row.signal}</td>
-                </motion.tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-white/[0.06] border-t border-white/[0.06]">
-          {CHARTS.map((chart, i) => {
-            const Icon = chart.icon
-            const isHighlighted = i === highlightedChart
-            return (
-              <motion.div
-                key={chart.label}
-                className={`bg-[#0A0A0C] p-5 transition-colors duration-500 ${
-                  isHighlighted
-                    ? role === 'brand'
-                      ? 'ring-1 ring-inset ring-blue-400/25 bg-blue-400/[0.03]'
-                      : 'ring-1 ring-inset ring-green-400/25 bg-green-400/[0.03]'
-                    : ''
-                }`}
-                initial={{ opacity: 0, y: 12 }}
-                animate={terminalInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
-                transition={revealTransition(terminalInView, 0.35, {
-                  duration: 0.5,
-                  index: i,
-                  count: CHARTS.length,
-                  stagger: 0.1,
-                })}
-              >
-                <div className="flex items-center gap-2 mb-1">
-                  <Icon size={14} className="text-zinc-500" aria-hidden="true" />
-                  <span className="font-mono text-[10px] text-zinc-500 uppercase tracking-widest">
-                    {chart.label}
-                  </span>
-                </div>
-                <p className="text-2xl font-bold text-white font-mono tabular-nums">
-                  {chart.metric}
-                </p>
-                <p className="text-[10px] text-zinc-600 font-mono">{chart.sub}</p>
-                <MiniBarChart bars={chart.bars} color={chart.color} animate={terminalInView} />
-              </motion.div>
-            )
-          })}
-        </div>
-      </motion.div>
-
-      {deepDiveOpacity && <TerminalDeepDive opacity={deepDiveOpacity} />}
-    </div>
-  )
-}
-
-function VoxelIntelligenceMobile() {
-  const terminalRef = useRef<HTMLDivElement>(null)
-  const terminalInView = useInView(terminalRef, { once: false, amount: 0.2 })
-
-  return (
     <SectionReveal
-      className="relative px-4 py-24 bg-[#0A0A0C] md:hidden"
-      aria-labelledby="voxel-terminal-heading-mobile"
-    >
-      <div className="relative z-10 max-w-6xl mx-auto">
-        <SectionHeader id="voxel-terminal-heading-mobile" />
-        <TerminalWindow terminalRef={terminalRef} terminalInView={terminalInView} />
-      </div>
-    </SectionReveal>
-  )
-}
-
-function VoxelIntelligenceDesktop() {
-  const sectionRef = useRef<HTMLElement>(null)
-  const terminalRef = useRef<HTMLDivElement>(null)
-  const terminalInView = useInView(terminalRef, { once: false, amount: 0.15 })
-
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ['start start', 'end end'],
-  })
-
-  const zoom = useTransform(scrollYProgress, (p) => {
-    if (p < 0.18) return 0
-    if (p < 0.48) return (p - 0.18) / 0.3
-    if (p < 0.68) return 1
-    if (p < 0.9) return 1 - (p - 0.68) / 0.22
-    return 0
-  })
-
-  const headerOpacity = useTransform(zoom, [0, 0.35, 0.75], [1, 0.15, 0])
-  const headerBlur = useTransform(zoom, (v) => `blur(${v * 10}px)`)
-  const headerY = useTransform(zoom, [0, 1], [0, -48])
-
-  const terminalScale = useTransform(zoom, [0, 1], [1, 2.15])
-  const terminalY = useTransform(zoom, [0, 0.5, 1], [0, -32, 0])
-  const contentBlur = useTransform(zoom, (v) => `blur(${v * 5}px)`)
-  const contentDim = useTransform(zoom, [0, 0.4, 1], [1, 0.55, 0.55])
-  const deepDiveOpacity = useTransform(zoom, [0.25, 0.55, 0.85], [0, 1, 0])
-  const vignetteOpacity = useTransform(zoom, [0.2, 0.5], [0, 0.85])
-  const scrollHint = useTransform(zoom, [0, 0.12, 0.22], [1, 1, 0])
-
-  return (
-    <section
-      ref={sectionRef}
-      className="relative hidden md:block bg-[#0A0A0C]"
-      style={{ height: '300vh' }}
+      className="relative px-4 py-24 md:py-32 bg-[#0A0A0C]"
       aria-labelledby="voxel-terminal-heading"
     >
-      <div className="sticky top-0 h-screen overflow-hidden flex flex-col items-center justify-center px-4">
-        <motion.div
-          className="w-full max-w-6xl mx-auto shrink-0"
-          style={{ opacity: headerOpacity, y: headerY, filter: headerBlur }}
-        >
-          <SectionHeader id="voxel-terminal-heading" />
-        </motion.div>
+      <div className="relative z-10 max-w-6xl mx-auto">
+        <div className="text-center mb-12">
+          <div className="flex justify-center mb-3">
+            <RoleBadge />
+          </div>
+          <p className="text-xs font-mono text-zinc-500 uppercase tracking-widest mb-3">
+            Voxel Intelligence
+          </p>
+          <h2
+            id="voxel-terminal-heading"
+            className="text-3xl sm:text-4xl font-bold text-white"
+          >
+            The Terminal
+          </h2>
+          <motion.p
+            key={role ?? 'default'}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, ease: EASE }}
+            className="mt-3 text-zinc-400 max-w-xl mx-auto text-sm sm:text-base"
+          >
+            {sectionCopy}
+          </motion.p>
+        </div>
 
-        <motion.div
-          className="w-full max-w-6xl mx-auto relative"
-          style={{
-            scale: terminalScale,
-            y: terminalY,
-            transformOrigin: '50% 12%',
-          }}
+        <div
+          ref={terminalRef}
+          className="rounded-xl border border-white/[0.08] bg-[#0A0A0C] shadow-[0_0_80px_rgba(0,0,0,0.6)]"
         >
-          <motion.div style={{ opacity: contentDim }}>
-            <TerminalWindow
-              terminalRef={terminalRef}
-              terminalInView={terminalInView}
-              blurAmount={contentBlur}
-              deepDiveOpacity={deepDiveOpacity}
-            />
-          </motion.div>
+          <div className="overflow-hidden rounded-t-xl">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.06] bg-white/[0.02]">
+            <div className="flex items-center gap-3">
+              <div className="flex gap-1.5" aria-hidden="true">
+                <span className="w-2.5 h-2.5 rounded-full bg-zinc-700" />
+                <span className="w-2.5 h-2.5 rounded-full bg-zinc-700" />
+                <span className="w-2.5 h-2.5 rounded-full bg-zinc-700" />
+              </div>
+              <span className="font-mono text-[11px] text-zinc-500 tracking-widest uppercase">
+                voxel://intelligence.terminal
+              </span>
+            </div>
+            <div
+              className="flex items-center gap-2 font-mono text-[10px] text-green-400 uppercase tracking-widest"
+              role="status"
+              aria-label="Live signal active"
+            >
+              <motion.span
+                className="relative flex h-2 w-2"
+                animate={{
+                  scale: [1, 1.4, 1],
+                  opacity: [0.7, 1, 0.7],
+                }}
+                transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+              >
+                <span className="absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-60 animate-ping" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-green-400" />
+              </motion.span>
+              Live Signal
+            </div>
+          </div>
 
-          <motion.div
-            className="pointer-events-none absolute inset-0 rounded-xl"
-            style={{
-              opacity: vignetteOpacity,
-              background:
-                'radial-gradient(ellipse 55% 70% at 78% 50%, transparent 0%, rgba(10,10,12,0.55) 55%, rgba(10,10,12,0.92) 100%)',
-            }}
-            aria-hidden="true"
-          />
-        </motion.div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left font-mono text-xs">
+              <thead>
+                <tr className="border-b border-white/[0.06] text-zinc-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 font-medium" scope="col">Platform</th>
+                  <th className="px-4 py-3 font-medium" scope="col">Category</th>
+                  <th className="px-4 py-3 font-medium text-right" scope="col">Momentum</th>
+                  <th className="px-4 py-3 font-medium text-center" scope="col">7d</th>
+                  <th className="px-4 py-3 font-medium text-right" scope="col">Signal</th>
+                </tr>
+              </thead>
+              <tbody>
+                {TABLE_ROWS.map((row, i) => (
+                  <motion.tr
+                    key={`${row.platform}-${row.category}`}
+                    className={`border-b border-white/[0.04] transition-colors ${
+                      i === highlightedRow
+                        ? role === 'brand'
+                          ? 'bg-blue-400/8 ring-1 ring-inset ring-blue-400/20'
+                          : 'bg-green-400/8 ring-1 ring-inset ring-green-400/20'
+                        : 'hover:bg-white/[0.02]'
+                    }`}
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={terminalInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -8 }}
+                    transition={revealTransition(terminalInView, 0.1, {
+                      duration: 0.4,
+                      index: i,
+                      count: TABLE_ROWS.length,
+                      stagger: 0.07,
+                    })}
+                  >
+                    <td className="px-4 py-3 text-zinc-300">{row.platform}</td>
+                    <td className="px-4 py-3 text-white">{row.category}</td>
+                    <td
+                      className={`px-4 py-3 text-right font-semibold ${
+                        row.momentum.startsWith('+') ? 'text-green-400' : 'text-red-400'
+                      }`}
+                    >
+                      {row.momentum}
+                    </td>
+                    <td
+                      className={`px-4 py-3 text-center ${
+                        row.delta === '▲' ? 'text-green-400' : 'text-red-400'
+                      }`}
+                      aria-hidden="true"
+                    >
+                      {row.delta}
+                    </td>
+                    <td className="px-4 py-3 text-right text-zinc-500">{row.signal}</td>
+                  </motion.tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          </div>
 
-        <motion.p
-          className="pointer-events-none absolute bottom-8 left-1/2 -translate-x-1/2 font-mono text-[10px] uppercase tracking-widest text-zinc-500"
-          style={{ opacity: scrollHint }}
-          aria-hidden="true"
-        >
-          Scroll to enter the terminal
-        </motion.p>
+          <div className="relative overflow-visible border-t border-white/[0.06] pb-2">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-white/[0.06]">
+            {CHARTS.map((chart, i) => (
+              <TerminalMetricCard
+                key={chart.label}
+                chart={chart}
+                index={i}
+                inView={terminalInView}
+                highlighted={i === highlightedChart}
+                role={role}
+                isLast={i === CHARTS.length - 1}
+              />
+            ))}
+            </div>
+          </div>
+        </div>
       </div>
-    </section>
-  )
-}
-
-export default function VoxelIntelligence() {
-  return (
-    <>
-      <VoxelIntelligenceMobile />
-      <VoxelIntelligenceDesktop />
-    </>
+    </SectionReveal>
   )
 }
