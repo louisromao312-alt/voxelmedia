@@ -43,6 +43,15 @@ function VoxelCube({ v, size }: { v: BrainVoxel; size: number }) {
   const c = BLOCK_COLORS[v.glow]
   const h = size / 2
 
+  const faces = [
+    { name: 'front', bg: c.front, transform: `rotateY(0deg) translateZ(${h}px)`, glow: c.glow },
+    { name: 'back', bg: c.back, transform: `rotateY(180deg) translateZ(${h}px)` },
+    { name: 'right', bg: c.side, transform: `rotateY(90deg) translateZ(${h}px)` },
+    { name: 'left', bg: c.back, transform: `rotateY(-90deg) translateZ(${h}px)` },
+    { name: 'top', bg: c.top, transform: `rotateX(90deg) translateZ(${h}px)`, glow: c.glow },
+    { name: 'bottom', bg: c.bottom, transform: `rotateX(-90deg) translateZ(${h}px)` },
+  ] as const
+
   return (
     <div
       className="absolute"
@@ -63,83 +72,19 @@ function VoxelCube({ v, size }: { v: BrainVoxel; size: number }) {
           transformStyle: 'preserve-3d',
         }}
       >
-        {/* Top */}
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            background: c.top,
-            transform: `translateZ(${h}px)`,
-            boxShadow: c.glow,
-            backfaceVisibility: 'hidden',
-          }}
-        />
-        {/* Bottom */}
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            background: c.bottom,
-            transform: `rotateX(180deg) translateZ(${h}px)`,
-            backfaceVisibility: 'hidden',
-          }}
-        />
-        {/* Front */}
-        <div
-          style={{
-            position: 'absolute',
-            width: size,
-            height: size,
-            left: 0,
-            bottom: 0,
-            background: c.front,
-            transformOrigin: 'bottom center',
-            transform: 'rotateX(-90deg)',
-            backfaceVisibility: 'hidden',
-          }}
-        />
-        {/* Back */}
-        <div
-          style={{
-            position: 'absolute',
-            width: size,
-            height: size,
-            left: 0,
-            top: 0,
-            background: c.back,
-            transformOrigin: 'top center',
-            transform: 'rotateX(90deg)',
-            backfaceVisibility: 'hidden',
-          }}
-        />
-        {/* Right */}
-        <div
-          style={{
-            position: 'absolute',
-            width: size,
-            height: size,
-            right: 0,
-            top: 0,
-            background: c.side,
-            transformOrigin: 'right center',
-            transform: 'rotateY(90deg)',
-            backfaceVisibility: 'hidden',
-          }}
-        />
-        {/* Left */}
-        <div
-          style={{
-            position: 'absolute',
-            width: size,
-            height: size,
-            left: 0,
-            top: 0,
-            background: c.side,
-            transformOrigin: 'left center',
-            transform: 'rotateY(-90deg)',
-            backfaceVisibility: 'hidden',
-          }}
-        />
+        {faces.map((f) => (
+          <div
+            key={f.name}
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background: f.bg,
+              boxShadow: 'glow' in f ? f.glow : undefined,
+              transform: f.transform,
+              backfaceVisibility: 'hidden',
+            }}
+          />
+        ))}
       </div>
     </div>
   )
@@ -159,6 +104,7 @@ export default function VoxelBrain() {
           width: 'min(2200px, 200vw)',
           height: 'min(2000px, 190vw)',
           perspective: 1800,
+          contain: 'layout style',
         }}
       >
         <div
