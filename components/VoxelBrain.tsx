@@ -1,29 +1,25 @@
 'use client'
 
 import { useMemo } from 'react'
-import { generateBrainVoxels, type BrainVoxel } from '@/lib/voxelBrainLayout'
+import { generateBrainVoxels, BRAIN_BLOCK_SIZE, type BrainVoxel } from '@/lib/voxelBrainLayout'
 
 const GLOW_STYLES: Record<
   BrainVoxel['glow'],
-  { face: string; edge: string; glow?: string }
+  { face: string; glow?: string }
 > = {
   core: {
     face: 'rgba(74,222,128,0.4)',
-    edge: 'rgba(74,222,128,0.6)',
     glow: '0 0 16px rgba(74,222,128,0.4)',
   },
   mid: {
     face: 'rgba(74,222,128,0.18)',
-    edge: 'rgba(74,222,128,0.38)',
     glow: '0 0 8px rgba(74,222,128,0.18)',
   },
   surface: {
     face: 'rgba(255,255,255,0.075)',
-    edge: 'rgba(255,255,255,0.15)',
   },
   none: {
     face: 'rgba(255,255,255,0.05)',
-    edge: 'rgba(255,255,255,0.1)',
   },
 }
 
@@ -98,7 +94,6 @@ function VoxelCube({ v, size }: { v: BrainVoxel; size: number }) {
               position: 'absolute',
               inset: 0,
               background: f.bg,
-              border: `1px solid ${s.edge}`,
               boxShadow: 'shadow' in f ? f.shadow : undefined,
               transform: f.transform,
               backfaceVisibility: 'hidden',
@@ -112,7 +107,6 @@ function VoxelCube({ v, size }: { v: BrainVoxel; size: number }) {
 
 export default function VoxelBrain() {
   const voxels = useMemo(() => generateBrainVoxels(), [])
-  const blockSize = 22
 
   return (
     <div
@@ -147,7 +141,7 @@ export default function VoxelBrain() {
           }}
         >
           {voxels.map((v, i) => (
-            <VoxelCube key={`${v.x}-${v.y}-${v.z}`} v={v} size={blockSize} />
+            <VoxelCube key={`${v.x}-${v.y}-${v.z}`} v={v} size={BRAIN_BLOCK_SIZE} />
           ))}
         </div>
       </div>

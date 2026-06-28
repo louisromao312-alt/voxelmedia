@@ -147,7 +147,7 @@ function glowLevel(p: Vec3): BrainVoxel['glow'] {
 }
 
 const STEP = 0.22
-const SCALE = 40
+export const BRAIN_BLOCK_SIZE = 40
 
 /** Anatomical voxel brain — dual hemispheres, fissure, cerebellum, brain stem */
 export function generateBrainVoxels(): BrainVoxel[] {
@@ -165,9 +165,9 @@ export function generateBrainVoxels(): BrainVoxel[] {
         if (!isInBrain(p)) continue
 
         voxels.push({
-          x: xi * SCALE,
-          y: -yi * SCALE,
-          z: zi * SCALE,
+          x: xi * BRAIN_BLOCK_SIZE,
+          y: -yi * BRAIN_BLOCK_SIZE,
+          z: zi * BRAIN_BLOCK_SIZE,
           glow: glowLevel(p),
         })
       }
