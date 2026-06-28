@@ -46,7 +46,10 @@ export default function IndustryGap() {
           The Minecraft creator economy runs on intuition.
           <span className="block text-zinc-500 mt-2">Not intelligence.</span>
         </h2>
-        <p className="text-zinc-400 text-base sm:text-lg leading-relaxed max-w-2xl mx-auto">
+        <p
+          id="industry-gap-body"
+          className="text-zinc-400 text-base sm:text-lg leading-relaxed max-w-2xl mx-auto"
+        >
           Studios chase trends blind. Brands sponsor creators without verified
           audience data. The Minecraft meta shifts overnight — and nobody has a
           single source of truth for what&apos;s actually moving across the{' '}

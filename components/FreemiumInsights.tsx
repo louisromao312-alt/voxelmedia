@@ -1,8 +1,9 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { useRef } from 'react'
+import { motion, useInView } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
-import SectionReveal, { EASE } from '@/components/SectionReveal'
+import SectionReveal, { EASE, revealTransition } from '@/components/SectionReveal'
 import BriefReportPreview from '@/components/BriefReportPreview'
 import { useUserJourney } from '@/context/UserJourneyContext'
 
@@ -11,6 +12,8 @@ function scrollToWaitlist() {
 }
 
 export default function FreemiumInsights() {
+  const contentRef = useRef<HTMLDivElement>(null)
+  const contentInView = useInView(contentRef, { once: false, amount: 0.3 })
   const { role } = useUserJourney()
 
   const subCopy =
@@ -26,14 +29,20 @@ export default function FreemiumInsights() {
       aria-labelledby="freemium-insights-heading"
     >
       <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-14 items-center rounded-2xl border border-white/[0.08] bg-white/[0.02] p-8 sm:p-10 overflow-hidden">
+        <div
+          ref={contentRef}
+          className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-14 items-center rounded-2xl border border-white/[0.08] bg-white/[0.02] p-8 sm:p-10 overflow-hidden"
+        >
           {/* Left — report preview mockup */}
           <motion.div
             className="relative"
             initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.7, ease: EASE }}
+            animate={
+              contentInView
+                ? { opacity: 1, x: 0 }
+                : { opacity: 0, x: -20 }
+            }
+            transition={revealTransition(contentInView, 0, { duration: 0.7 })}
           >
             <BriefReportPreview />
           </motion.div>
@@ -42,9 +51,12 @@ export default function FreemiumInsights() {
           <motion.div
             className="flex flex-col gap-5"
             initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.7, delay: 0.1, ease: EASE }}
+            animate={
+              contentInView
+                ? { opacity: 1, x: 0 }
+                : { opacity: 0, x: 20 }
+            }
+            transition={revealTransition(contentInView, 0.1, { duration: 0.7 })}
           >
             <p className="text-xs font-mono text-green-400 uppercase tracking-widest">
               Freemium Insights

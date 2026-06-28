@@ -1,7 +1,9 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { useRef } from 'react'
+import { motion, useInView } from 'framer-motion'
 import { TrendingUp, TrendingDown } from 'lucide-react'
+import { revealTransition } from '@/components/SectionReveal'
 import { useUserJourney } from '@/context/UserJourneyContext'
 
 const TRENDS = [
@@ -13,6 +15,8 @@ const TRENDS = [
 const SPARKLINE = 'M4,28 L16,22 L28,24 L40,14 L52,18 L64,10 L76,12 L88,6 L100,8'
 
 export default function BriefReportPreview() {
+  const sparkRef = useRef<SVGSVGElement>(null)
+  const sparkInView = useInView(sparkRef, { once: false, amount: 0.4 })
   const { role } = useUserJourney()
 
   const insight =
@@ -97,7 +101,12 @@ export default function BriefReportPreview() {
           <p className="text-[9px] text-zinc-500 uppercase tracking-widest mb-2">
             7-Day Momentum Index
           </p>
-          <svg viewBox="0 0 104 32" className="w-full h-10" aria-hidden="true">
+          <svg
+            ref={sparkRef}
+            viewBox="0 0 104 32"
+            className="w-full h-10"
+            aria-hidden="true"
+          >
             <defs>
               <linearGradient id="brief-spark-fill" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="#4ade80" stopOpacity="0.2" />
@@ -115,9 +124,8 @@ export default function BriefReportPreview() {
               strokeWidth="1.5"
               strokeLinecap="round"
               initial={{ pathLength: 0 }}
-              whileInView={{ pathLength: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+              animate={sparkInView ? { pathLength: 1 } : { pathLength: 0 }}
+              transition={revealTransition(sparkInView, 0, { duration: 1.2 })}
             />
           </svg>
         </div>

@@ -2,7 +2,7 @@
 
 import { useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
-import SectionReveal, { EASE } from '@/components/SectionReveal'
+import SectionReveal, { revealTransition } from '@/components/SectionReveal'
 import { RoleBadge } from '@/components/JourneySelector'
 import { useUserJourney } from '@/context/UserJourneyContext'
 import { useCountUp } from '@/components/useCountUp'
@@ -12,18 +12,21 @@ const METRICS = [
   {
     value: 1,
     suffix: 'M+',
+    unit: null,
     label: 'Players Reached',
     sub: 'in native ecosystems',
   },
   {
     value: 35,
     suffix: '+',
+    unit: null,
     label: 'Custom Games Delivered',
     sub: 'across the creator economy',
   },
   {
     value: 5,
-    suffix: ' years',
+    suffix: '',
+    unit: 'years',
     label: 'Experience',
     sub: 'building in the Minecraft ecosystem',
   },
@@ -32,7 +35,7 @@ const METRICS = [
 const MINECRAFT_PLAYERS = {
   value: 182,
   suffix: 'M+',
-  headline: '182 Million Monthly Minecraft Players',
+  headline: 'Monthly Minecraft Players',
   description:
     '182 million active monthly players, ready to engage with your brand.',
 } as const
@@ -40,6 +43,7 @@ const MINECRAFT_PLAYERS = {
 function MetricCard({
   value,
   suffix,
+  unit,
   label,
   sub,
   index,
@@ -66,14 +70,24 @@ function MetricCard({
           : 'border-white/[0.07] bg-white/[0.02]'
       }`}
       initial={{ opacity: 0, y: 20 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, delay: 0.15 + index * 0.1, ease: EASE }}
+      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+      transition={revealTransition(inView, 0.15, {
+        duration: 0.6,
+        index,
+        count: METRICS.length,
+        stagger: 0.1,
+      })}
       onPointerDown={(e) => onBurst(e.clientX, e.clientY)}
       whileTap={{ scale: 0.95 }}
     >
-      <p className="text-4xl sm:text-5xl font-bold text-white font-mono tabular-nums">
-        {count}
-        <span className="text-green-400">{suffix}</span>
+      <p className="flex items-baseline justify-center gap-1.5 whitespace-nowrap text-4xl sm:text-5xl font-bold text-white font-mono tabular-nums leading-none">
+        <span>{count}</span>
+        {unit && (
+          <span className="text-2xl sm:text-3xl font-semibold text-green-400">
+            {unit}
+          </span>
+        )}
+        {suffix && <span className="text-green-400">{suffix}</span>}
       </p>
       <p className="mt-2 text-sm font-semibold text-white">{label}</p>
       <p className="mt-1 text-xs text-zinc-500 font-mono">{sub}</p>
@@ -102,8 +116,8 @@ function MinecraftPlayersCallout({
           : 'border-white/[0.07] bg-white/[0.02]'
       }`}
       initial={{ opacity: 0, y: 20 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, delay: 0.45, ease: EASE }}
+      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+      transition={revealTransition(inView, 0.45, { duration: 0.6 })}
     >
       <p className="text-5xl sm:text-6xl font-bold text-white font-mono tabular-nums">
         {count}
@@ -122,8 +136,8 @@ function MinecraftPlayersCallout({
 export default function ArchitectsAdvantage() {
   const metricsRef = useRef<HTMLDivElement>(null)
   const calloutRef = useRef<HTMLDivElement>(null)
-  const metricsInView = useInView(metricsRef, { once: true, amount: 0.4 })
-  const calloutInView = useInView(calloutRef, { once: true, amount: 0.4 })
+  const metricsInView = useInView(metricsRef, { once: false, amount: 0.4 })
+  const calloutInView = useInView(calloutRef, { once: false, amount: 0.4 })
   const { role } = useUserJourney()
   const { triggerBurst } = useBurst()
   const highlightedIndex = role === 'creator' ? 1 : -1

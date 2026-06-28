@@ -3,7 +3,7 @@
 import { useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { Shield, Zap, Users } from 'lucide-react'
-import SectionReveal, { EASE } from '@/components/SectionReveal'
+import SectionReveal, { EASE, revealTransition } from '@/components/SectionReveal'
 import { RoleBadge } from '@/components/JourneySelector'
 import { useUserJourney } from '@/context/UserJourneyContext'
 
@@ -60,11 +60,12 @@ function MiniBarChart({
           style={{ backgroundColor: color, opacity: 0.85 }}
           initial={{ height: 0 }}
           animate={animate ? { height: `${h}%` } : { height: 0 }}
-          transition={{
+          transition={revealTransition(animate, 0.15, {
             duration: 0.5,
-            delay: 0.15 + i * 0.06,
-            ease: EASE,
-          }}
+            index: i,
+            count: bars.length,
+            stagger: 0.06,
+          })}
         />
       ))}
     </div>
@@ -73,7 +74,7 @@ function MiniBarChart({
 
 export default function VoxelIntelligence() {
   const terminalRef = useRef<HTMLDivElement>(null)
-  const terminalInView = useInView(terminalRef, { once: true, amount: 0.2 })
+  const terminalInView = useInView(terminalRef, { once: false, amount: 0.2 })
   const { role } = useUserJourney()
 
   const highlightedRow = role === 'creator' ? 0 : role === 'brand' ? 2 : -1
@@ -89,9 +90,9 @@ export default function VoxelIntelligence() {
   return (
     <SectionReveal
       className="relative px-4 py-24 md:py-32 bg-[#0A0A0C]"
-      aria-labelledby="voxel-intelligence-heading"
+      aria-labelledby="voxel-terminal-heading"
     >
-      <div className="max-w-6xl mx-auto">
+      <div className="relative z-10 max-w-6xl mx-auto">
         {/* Section header */}
         <div className="text-center mb-12">
           <div className="flex justify-center mb-3">
@@ -101,7 +102,7 @@ export default function VoxelIntelligence() {
             Voxel Intelligence
           </p>
           <h2
-            id="voxel-intelligence-heading"
+            id="voxel-terminal-heading"
             className="text-3xl sm:text-4xl font-bold text-white"
           >
             The Terminal
@@ -178,8 +179,13 @@ export default function VoxelIntelligence() {
                         : 'hover:bg-white/[0.02]'
                     }`}
                     initial={{ opacity: 0, x: -8 }}
-                    animate={terminalInView ? { opacity: 1, x: 0 } : {}}
-                    transition={{ duration: 0.4, delay: 0.1 + i * 0.07, ease: EASE }}
+                    animate={terminalInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -8 }}
+                    transition={revealTransition(terminalInView, 0.1, {
+                      duration: 0.4,
+                      index: i,
+                      count: TABLE_ROWS.length,
+                      stagger: 0.07,
+                    })}
                   >
                     <td className="px-4 py-3 text-zinc-300">{row.platform}</td>
                     <td className="px-4 py-3 text-white">{row.category}</td>
@@ -221,8 +227,13 @@ export default function VoxelIntelligence() {
                       : ''
                   }`}
                   initial={{ opacity: 0, y: 12 }}
-                  animate={terminalInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.5, delay: 0.35 + i * 0.1, ease: EASE }}
+                  animate={terminalInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
+                  transition={revealTransition(terminalInView, 0.35, {
+                    duration: 0.5,
+                    index: i,
+                    count: CHARTS.length,
+                    stagger: 0.1,
+                  })}
                 >
                   <div className="flex items-center gap-2 mb-1">
                     <Icon size={14} className="text-zinc-500" aria-hidden="true" />

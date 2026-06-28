@@ -3,7 +3,7 @@
 import { useRef, type PointerEvent } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { Building2, Users, Shield } from 'lucide-react'
-import SectionReveal, { EASE } from '@/components/SectionReveal'
+import SectionReveal, { revealTransition } from '@/components/SectionReveal'
 import { RoleBadge } from '@/components/JourneySelector'
 import { useUserJourney } from '@/context/UserJourneyContext'
 
@@ -11,7 +11,7 @@ import { useBurst } from '@/context/BlockBurstContext'
 
 export default function AgencyBridge() {
   const bridgeRef = useRef<HTMLDivElement>(null)
-  const bridgeInView = useInView(bridgeRef, { once: true, amount: 0.35 })
+  const bridgeInView = useInView(bridgeRef, { once: false, amount: 0.35 })
   const { role } = useUserJourney()
   const { triggerBurst } = useBurst()
 
@@ -66,8 +66,8 @@ export default function AgencyBridge() {
                   : 'border-white/[0.07]'
             }`}
             initial={{ opacity: 0, x: -32 }}
-            animate={bridgeInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.7, ease: EASE }}
+            animate={bridgeInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -32 }}
+            transition={revealTransition(bridgeInView, 0, { duration: 0.7 })}
             onPointerDown={handleCardBurst}
             whileTap={{ scale: 0.97 }}
           >
@@ -123,7 +123,7 @@ export default function AgencyBridge() {
                     ? { pathLength: 1, opacity: 1 }
                     : { pathLength: 0, opacity: 0 }
                 }
-                transition={{ duration: 1.4, ease: EASE, delay: 0.15 }}
+                transition={revealTransition(bridgeInView, 0.15, { duration: 1.4 })}
               />
 
               <motion.path
@@ -139,7 +139,7 @@ export default function AgencyBridge() {
                     ? { pathLength: 1, opacity: 1 }
                     : { pathLength: 0, opacity: 0 }
                 }
-                transition={{ duration: 1.5, ease: EASE, delay: 0.25 }}
+                transition={revealTransition(bridgeInView, 0.25, { duration: 1.5 })}
               />
             </svg>
 
@@ -182,7 +182,7 @@ export default function AgencyBridge() {
                     ? { pathLength: 1, opacity: 1 }
                     : { pathLength: 0, opacity: 0 }
                 }
-                transition={{ duration: 1.4, ease: EASE, delay: 0.15 }}
+                transition={revealTransition(bridgeInView, 0.15, { duration: 1.4 })}
               />
 
               <motion.path
@@ -198,15 +198,15 @@ export default function AgencyBridge() {
                     ? { pathLength: 1, opacity: 1 }
                     : { pathLength: 0, opacity: 0 }
                 }
-                transition={{ duration: 1.5, ease: EASE, delay: 0.25 }}
+                transition={revealTransition(bridgeInView, 0.25, { duration: 1.5 })}
               />
             </svg>
 
             <motion.p
               className="mt-3 font-mono text-[10px] text-green-400 uppercase tracking-widest text-center whitespace-nowrap"
               initial={{ opacity: 0, y: 6 }}
-              animate={bridgeInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 1.1, ease: EASE }}
+              animate={bridgeInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 6 }}
+              transition={revealTransition(bridgeInView, 1.1, { duration: 0.5 })}
             >
               Voxel Compliant
               <br className="md:hidden" />
@@ -225,8 +225,8 @@ export default function AgencyBridge() {
                   : 'border-white/[0.07]'
             }`}
             initial={{ opacity: 0, x: 32 }}
-            animate={bridgeInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.7, ease: EASE, delay: 0.1 }}
+            animate={bridgeInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 32 }}
+            transition={revealTransition(bridgeInView, 0.1, { duration: 0.7 })}
             onPointerDown={handleCardBurst}
             whileTap={{ scale: 0.97 }}
           >

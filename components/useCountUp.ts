@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useInView } from 'framer-motion'
 
 export function useCountUp(
   target: number,
@@ -11,7 +10,10 @@ export function useCountUp(
   const [value, setValue] = useState(0)
 
   useEffect(() => {
-    if (!inView) return
+    if (!inView) {
+      setValue(0)
+      return
+    }
 
     let start: number | null = null
     let frame: number
