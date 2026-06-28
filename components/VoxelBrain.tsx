@@ -5,40 +5,71 @@ import { generateBrainVoxels, type BrainVoxel } from '@/lib/voxelBrainLayout'
 
 const GLOW_STYLES: Record<
   BrainVoxel['glow'],
-  { top: string; front: string; side: string; border: string; glow?: string }
+  { face: string; edge: string; glow?: string }
 > = {
   core: {
-    top: 'rgba(74,222,128,0.42)',
-    front: 'rgba(74,222,128,0.2)',
-    side: 'rgba(74,222,128,0.14)',
-    border: 'rgba(74,222,128,0.55)',
-    glow: '0 0 20px rgba(74,222,128,0.45)',
+    face: 'rgba(74,222,128,0.4)',
+    edge: 'rgba(74,222,128,0.6)',
+    glow: '0 0 16px rgba(74,222,128,0.4)',
   },
   mid: {
-    top: 'rgba(74,222,128,0.2)',
-    front: 'rgba(74,222,128,0.1)',
-    side: 'rgba(74,222,128,0.07)',
-    border: 'rgba(74,222,128,0.35)',
-    glow: '0 0 10px rgba(74,222,128,0.2)',
+    face: 'rgba(74,222,128,0.18)',
+    edge: 'rgba(74,222,128,0.38)',
+    glow: '0 0 8px rgba(74,222,128,0.18)',
   },
   surface: {
-    top: 'rgba(255,255,255,0.08)',
-    front: 'rgba(255,255,255,0.04)',
-    side: 'rgba(255,255,255,0.03)',
-    border: 'rgba(255,255,255,0.14)',
+    face: 'rgba(255,255,255,0.075)',
+    edge: 'rgba(255,255,255,0.15)',
   },
   none: {
-    top: 'rgba(255,255,255,0.055)',
-    front: 'rgba(255,255,255,0.03)',
-    side: 'rgba(255,255,255,0.02)',
-    border: 'rgba(255,255,255,0.1)',
+    face: 'rgba(255,255,255,0.05)',
+    edge: 'rgba(255,255,255,0.1)',
   },
 }
 
 function VoxelCube({ v, size }: { v: BrainVoxel; size: number }) {
   const s = GLOW_STYLES[v.glow]
-  const d = size * 0.4
-  const half = size / 2
+  const h = size / 2
+
+  const face = (shade: number) =>
+    v.glow === 'core' || v.glow === 'mid'
+      ? `rgba(74,222,128,${shade})`
+      : `rgba(255,255,255,${shade})`
+
+  const faces = [
+    {
+      name: 'front',
+      bg: face(0.07),
+      transform: `rotateY(0deg) translateZ(${h}px)`,
+      shadow: s.glow,
+    },
+    {
+      name: 'back',
+      bg: face(0.04),
+      transform: `rotateY(180deg) translateZ(${h}px)`,
+    },
+    {
+      name: 'right',
+      bg: face(0.05),
+      transform: `rotateY(90deg) translateZ(${h}px)`,
+    },
+    {
+      name: 'left',
+      bg: face(0.04),
+      transform: `rotateY(-90deg) translateZ(${h}px)`,
+    },
+    {
+      name: 'top',
+      bg: s.face,
+      transform: `rotateX(90deg) translateZ(${h}px)`,
+      shadow: s.glow,
+    },
+    {
+      name: 'bottom',
+      bg: face(0.03),
+      transform: `rotateX(-90deg) translateZ(${h}px)`,
+    },
+  ] as const
 
   return (
     <div
@@ -46,11 +77,10 @@ function VoxelCube({ v, size }: { v: BrainVoxel; size: number }) {
       style={{
         width: size,
         height: size,
-        left: -half,
-        top: -half,
+        left: -h,
+        top: -h,
         transform: `translate3d(${v.x}px, ${v.y}px, ${v.z}px)`,
         transformStyle: 'preserve-3d',
-        willChange: 'transform',
       }}
     >
       <div
@@ -61,48 +91,20 @@ function VoxelCube({ v, size }: { v: BrainVoxel; size: number }) {
           transformStyle: 'preserve-3d',
         }}
       >
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            borderRadius: 3,
-            background: s.top,
-            border: `1px solid ${s.border}`,
-            boxShadow: s.glow,
-            transform: `translateZ(${d}px)`,
-            backfaceVisibility: 'hidden',
-          }}
-        />
-        <div
-          style={{
-            position: 'absolute',
-            width: size,
-            height: d,
-            bottom: 0,
-            left: 0,
-            borderRadius: 2,
-            background: s.front,
-            border: `1px solid ${s.border}`,
-            transformOrigin: 'bottom',
-            transform: 'rotateX(-90deg)',
-            backfaceVisibility: 'hidden',
-          }}
-        />
-        <div
-          style={{
-            position: 'absolute',
-            width: d,
-            height: size,
-            top: 0,
-            right: 0,
-            borderRadius: 2,
-            background: s.side,
-            border: `1px solid ${s.border}`,
-            transformOrigin: 'right',
-            transform: 'rotateY(90deg)',
-            backfaceVisibility: 'hidden',
-          }}
-        />
+        {faces.map((f) => (
+          <div
+            key={f.name}
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background: f.bg,
+              border: `1px solid ${s.edge}`,
+              boxShadow: 'shadow' in f ? f.shadow : undefined,
+              transform: f.transform,
+              backfaceVisibility: 'hidden',
+            }}
+          />
+        ))}
       </div>
     </div>
   )
@@ -122,18 +124,18 @@ export default function VoxelBrain() {
         style={{
           width: 'min(2200px, 200vw)',
           height: 'min(2000px, 190vw)',
-          perspective: 1600,
+          perspective: 1800,
           contain: 'layout style',
         }}
       >
         <div
           className="pointer-events-none absolute rounded-full"
           style={{
-            width: '48%',
-            height: '48%',
+            width: '46%',
+            height: '46%',
             background:
-              'radial-gradient(circle, rgba(74,222,128,0.24) 0%, rgba(74,222,128,0.08) 40%, transparent 72%)',
-            filter: 'blur(40px)',
+              'radial-gradient(circle, rgba(74,222,128,0.26) 0%, rgba(74,222,128,0.09) 38%, transparent 70%)',
+            filter: 'blur(44px)',
           }}
         />
 
@@ -145,7 +147,7 @@ export default function VoxelBrain() {
           }}
         >
           {voxels.map((v, i) => (
-            <VoxelCube key={i} v={v} size={blockSize} />
+            <VoxelCube key={`${v.x}-${v.y}-${v.z}`} v={v} size={blockSize} />
           ))}
         </div>
       </div>

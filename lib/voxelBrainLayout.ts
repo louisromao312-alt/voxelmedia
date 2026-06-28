@@ -5,96 +5,170 @@ export type BrainVoxel = {
   glow: 'core' | 'mid' | 'surface' | 'none'
 }
 
-function isInBrain(nx: number, ny: number, nz: number): boolean {
-  const side = nx >= 0 ? 1 : -1
-  const hx = nx - side * 0.09
-  const hy = ny + 0.02
-  const hz = nz
+/** Normalised brain space: x = lateral, y = superior, z = anterior */
+type Vec3 = { x: number; y: number; z: number }
 
-  const ex = 1.02
-  const ey = 0.86
-  const ez = 0.92
-  const dist = (hx / ex) ** 2 + (hy / ey) ** 2 + (hz / ez) ** 2
+function ellipsoid(p: Vec3, c: Vec3, rx: number, ry: number, rz: number): number {
+  const dx = (p.x - c.x) / rx
+  const dy = (p.y - c.y) / ry
+  const dz = (p.z - c.z) / rz
+  return dx * dx + dy * dy + dz * dz
+}
 
-  const cerebellum =
-    ((hx / 0.42) ** 2 +
-      ((hy + 0.48) / 0.2) ** 2 +
-      ((hz + 0.32) / 0.34) ** 2) < 1 &&
-    hy < -0.12 &&
-    hz < 0.05
+function inCerebralHemisphere(p: Vec3, side: -1 | 1): boolean {
+  const cx = side * 0.56
+  const hp: Vec3 = { x: p.x - cx, y: p.y, z: p.z }
 
-  if (cerebellum) return true
-  if (dist > 1) return false
-  if (Math.abs(nx) < 0.05 && hy > -0.15) return false
-  if (hy < -0.68) return false
-  if (hy < -0.38 && dist > 0.62) return false
+  let rx = 0.48
+  let ry = 0.56
+  let rz = 0.5
 
-  if (
-    hy > -0.28 &&
-    hy < 0.22 &&
-    Math.abs(hx) > 0.52 &&
-    hz > -0.05 &&
-    hz < 0.38 &&
-    dist > 0.68
-  ) {
-    return false
+  // Frontal lobe — broad forehead, forward extension
+  if (p.z > 0.05) {
+    const t = Math.min(1, (p.z - 0.05) / 0.38)
+    rz += 0.14 * t
+    if (p.y > -0.1) rx += 0.05 * t
   }
 
-  if (hz > 0.38 && hy < 0.15 && Math.abs(hx) > 0.18) return false
-  if (hz > 0.2 && hy > -0.05 && dist > 0.88) return false
-  if (dist > 0.94) return false
+  // Parietal dome
+  if (p.y > 0.12) {
+    const t = Math.min(1, (p.y - 0.12) / 0.38)
+    ry += 0.08 * t
+    rx += 0.05 * t
+  }
 
-  if (dist > 0.72) {
-    const sulcus =
-      Math.sin(hx * 10 + hy * 2) *
-      Math.cos(hz * 8 - hy * 3) *
-      Math.sin(hy * 7 + hz * 3)
-    if (sulcus > 0.4) return false
+  // Temporal lobes — lateral wings at mid-level
+  if (p.y > -0.34 && p.y < 0.1 && p.z > -0.18 && p.z < 0.28) {
+    rx += 0.09
+  }
+
+  // Occipital lobe — back of cerebrum
+  if (p.z < -0.1 && p.y > -0.2) {
+    const t = Math.min(1, (-p.z - 0.1) / 0.3)
+    rz += 0.08 * t
+  }
+
+  const d = ellipsoid(hp, { x: 0, y: 0, z: 0 }, rx, ry, rz)
+  if (d > 1) return false
+
+  // Longitudinal fissure — deep groove between hemispheres
+  const fissure = 0.05 + Math.max(0, p.y) * 0.085
+  if (Math.abs(p.x) < fissure && p.y > -0.42) return false
+
+  // Inferior surface — curved cut under hemispheres
+  if (p.y < -0.36) {
+    const under = ellipsoid(
+      hp,
+      { x: 0, y: -0.1, z: -0.04 },
+      rx * 0.84,
+      ry * 0.5,
+      rz * 0.8,
+    )
+    if (under > 1) return false
+  }
+
+  // Sylvian fissure hint — lateral indent
+  if (
+    d > 0.55 &&
+    p.y > -0.22 &&
+    p.y < 0.06 &&
+    p.z > 0.02 &&
+    p.z < 0.28 &&
+    Math.abs(hp.x) > 0.22 &&
+    Math.abs(hp.x) < 0.38
+  ) {
+    const indent = Math.sin((p.z - 0.02) * 12) * Math.cos(p.y * 8)
+    if (indent > 0.35) return false
+  }
+
+  // Surface sulci — light texture only
+  if (d > 0.78) {
+    const groove =
+      Math.sin(hp.x * 8 + p.y * 2) *
+      Math.cos(p.z * 7 - p.y * 2.5) *
+      Math.sin(p.y * 6)
+    if (groove > 0.48) return false
   }
 
   return true
 }
 
-function glowLevel(
-  hx: number,
-  hy: number,
-  hz: number,
-  dist: number,
-): BrainVoxel['glow'] {
-  const core = hx * hx * 1.1 + hy * hy + hz * hz
-  if (core < 0.14) return 'core'
-  if (core < 0.32) return 'mid'
-  if (dist > 0.68) return 'surface'
+function inCerebellum(p: Vec3, side: -1 | 1): boolean {
+  const cx = side * 0.28
+  const cy = -0.5
+  const cz = -0.34
+  const hp: Vec3 = { x: p.x - cx, y: p.y - cy, z: p.z - cz }
+
+  const d = ellipsoid(hp, { x: 0, y: 0, z: 0 }, 0.32, 0.22, 0.26)
+  if (d > 1) return false
+
+  // Only below and behind cerebrum
+  if (p.y > -0.26 || p.z > -0.04) return false
+
+  // Vermis — central gap between cerebellar hemispheres
+  if (Math.abs(p.x) < 0.065 && p.y > -0.58) return false
+
+  return true
+}
+
+function inBrainStem(p: Vec3): boolean {
+  if (p.y > -0.3 || Math.abs(p.x) > 0.12) return false
+
+  const upper = ellipsoid(p, { x: 0, y: -0.38, z: -0.04 }, 0.11, 0.1, 0.1)
+  const lower = ellipsoid(p, { x: 0, y: -0.62, z: -0.06 }, 0.08, 0.2, 0.09)
+
+  return upper <= 1 || lower <= 1
+}
+
+function inCorpusCallosum(p: Vec3): boolean {
+  if (p.y < 0.34 || Math.abs(p.x) > 0.16) return false
+  return ellipsoid(p, { x: 0, y: 0.5, z: -0.04 }, 0.14, 0.055, 0.2) <= 1
+}
+
+function isInBrain(p: Vec3): boolean {
+  if (inBrainStem(p)) return true
+  if (inCerebellum(p, -1) || inCerebellum(p, 1)) return true
+  if (inCorpusCallosum(p)) return true
+  if (inCerebralHemisphere(p, -1) || inCerebralHemisphere(p, 1)) return true
+  return false
+}
+
+function glowLevel(p: Vec3): BrainVoxel['glow'] {
+  const side: -1 | 1 = p.x >= 0 ? 1 : -1
+  const cx = side * 0.56
+  const hp: Vec3 = { x: p.x - cx, y: p.y, z: p.z }
+  const shell = ellipsoid(hp, { x: 0, y: 0, z: 0 }, 0.48, 0.56, 0.5)
+
+  const r2 = p.x * p.x * 0.9 + p.y * p.y + p.z * p.z * 0.95
+  if (r2 < 0.1) return 'core'
+  if (r2 < 0.24) return 'mid'
+  if (shell > 0.7) return 'surface'
   return 'none'
 }
 
-/** Coarse low-poly brain — fewer voxels for performance */
+const STEP = 0.22
+const SCALE = 40
+
+/** Anatomical voxel brain — dual hemispheres, fissure, cerebellum, brain stem */
 export function generateBrainVoxels(): BrainVoxel[] {
   const voxels: BrainVoxel[] = []
-  const step = 0.28
-  const scale = 42
 
-  for (let xi = -13; xi <= 13; xi++) {
-    for (let yi = -11; yi <= 13; yi++) {
-      for (let zi = -10; zi <= 10; zi++) {
-        const nx = xi * step
-        const ny = yi * step
-        const nz = zi * step
+  for (let xi = -15; xi <= 15; xi++) {
+    for (let yi = -17; yi <= 17; yi++) {
+      for (let zi = -13; zi <= 13; zi++) {
+        const p: Vec3 = {
+          x: xi * STEP,
+          y: yi * STEP,
+          z: zi * STEP,
+        }
 
-        if (!isInBrain(nx, ny, nz)) continue
-
-        const side = nx >= 0 ? 1 : -1
-        const hx = nx - side * 0.09
-        const hy = ny + 0.02
-        const hz = nz
-        const dist =
-          (hx / 1.02) ** 2 + (hy / 0.86) ** 2 + (hz / 0.92) ** 2
+        if (!isInBrain(p)) continue
 
         voxels.push({
-          x: xi * scale,
-          y: yi * scale,
-          z: zi * scale,
-          glow: glowLevel(hx, hy, hz, dist),
+          x: xi * SCALE,
+          y: -yi * SCALE,
+          z: zi * SCALE,
+          glow: glowLevel(p),
         })
       }
     }
