@@ -1,7 +1,6 @@
 'use client'
 
-import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import type { LucideIcon } from 'lucide-react'
 import { EASE } from '@/components/SectionReveal'
 
@@ -52,6 +51,12 @@ const CHART_DETAILS: Record<string, ChartDetail> = {
       { label: 'Verticals mapped', value: '6' },
     ],
   },
+}
+
+function expandedGridColumn(index: number, total: number) {
+  if (index === 0) return '1 / span 2'
+  if (index === total - 1) return '2 / span 2'
+  return '1 / span 3'
 }
 
 function MiniBarChart({
@@ -111,19 +116,24 @@ function DetailSparkline({
 export default function TerminalMetricCard({
   chart,
   index,
+  total,
   inView,
   highlighted,
   role,
-  isLast,
+  expanded,
+  dimmed,
+  onHoverChange,
 }: {
   chart: ChartConfig
   index: number
+  total: number
   inView: boolean
   highlighted: boolean
   role: string | null
-  isLast: boolean
+  expanded: boolean
+  dimmed: boolean
+  onHoverChange: (active: boolean) => void
 }) {
-  const [hovered, setHovered] = useState(false)
   const Icon = chart.icon
   const detail = CHART_DETAILS[chart.label]
   const sparkId = `metric-spark-${index}`
@@ -132,115 +142,124 @@ export default function TerminalMetricCard({
     ? role === 'brand'
       ? 'ring-blue-400/30'
       : 'ring-green-400/30'
-    : hovered
-      ? 'ring-white/15'
+    : expanded
+      ? 'ring-white/20'
       : 'ring-transparent'
 
   return (
-    <div
-      className="relative"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      onFocus={() => setHovered(true)}
+    <motion.div
+      layout
+      className="relative min-h-[148px]"
+      style={{
+        gridColumn: expanded ? expandedGridColumn(index, total) : 'auto',
+        zIndex: expanded ? 30 : 1,
+      }}
+      onMouseEnter={() => onHoverChange(true)}
+      onMouseLeave={() => onHoverChange(false)}
+      onFocus={() => onHoverChange(true)}
       onBlur={(e) => {
-        if (!e.currentTarget.contains(e.relatedTarget)) setHovered(false)
+        if (!e.currentTarget.contains(e.relatedTarget)) onHoverChange(false)
+      }}
+      animate={{
+        opacity: dimmed ? 0.28 : inView ? 1 : 0,
+        y: inView ? 0 : 12,
+        scale: dimmed ? 0.97 : 1,
+      }}
+      transition={{
+        layout: { duration: 0.48, ease: EASE },
+        opacity: { duration: 0.35, ease: EASE },
+        y: { duration: 0.5, delay: 0.35 + index * 0.1, ease: EASE },
+        scale: { duration: 0.35, ease: EASE },
       }}
     >
       <motion.div
+        layout
         tabIndex={0}
         role="button"
-        aria-expanded={hovered}
+        aria-expanded={expanded}
         aria-label={`${chart.label} — ${chart.metric}. Hover for details.`}
-        className={`relative z-10 bg-[#0A0A0C] p-5 outline-none cursor-default ring-1 ring-inset transition-shadow duration-300 ${ringClass} ${
+        className={`h-full overflow-hidden bg-[#0A0A0C] outline-none cursor-default ring-1 ring-inset ${ringClass} ${
           highlighted
             ? role === 'brand'
               ? 'bg-blue-400/[0.03]'
               : 'bg-green-400/[0.03]'
             : ''
         }`}
-        initial={{ opacity: 0, y: 12 }}
         animate={{
-          opacity: inView ? 1 : 0,
-          y: inView ? (hovered ? -18 : 0) : 12,
-          boxShadow: hovered
-            ? `0 24px 48px rgba(0,0,0,0.45), 0 0 0 1px ${chart.color}22`
+          marginTop: expanded ? -88 : 0,
+          boxShadow: expanded
+            ? `0 28px 56px rgba(0,0,0,0.5), 0 0 0 1px ${chart.color}30`
             : '0 0 0 rgba(0,0,0,0)',
         }}
         transition={{
-          opacity: { duration: 0.5, delay: 0.35 + index * 0.1, ease: EASE },
-          y: { duration: 0.42, ease: EASE },
+          layout: { duration: 0.48, ease: EASE },
+          marginTop: { duration: 0.45, ease: EASE },
           boxShadow: { duration: 0.35, ease: EASE },
         }}
       >
-        <div className="flex items-center gap-2 mb-1">
-          <Icon
-            size={14}
-            style={{ color: hovered ? chart.color : undefined }}
-            className={hovered ? '' : 'text-zinc-500'}
-            aria-hidden="true"
-          />
-          <span
-            className="font-mono text-[10px] uppercase tracking-widest transition-colors duration-300"
-            style={{ color: hovered ? chart.color : '#71717a' }}
-          >
-            {chart.label}
-          </span>
-        </div>
-        <p className="text-2xl font-bold text-white font-mono tabular-nums">
-          {chart.metric}
-        </p>
-        <p className="text-[10px] text-zinc-600 font-mono">{chart.sub}</p>
-        <MiniBarChart bars={chart.bars} color={chart.color} animate={inView} />
-      </motion.div>
+        <div className="flex h-full flex-col sm:flex-row">
+          <div className="shrink-0 p-5 sm:w-[42%] sm:min-w-[200px]">
+            <div className="flex items-center gap-2 mb-1">
+              <Icon
+                size={14}
+                style={{ color: expanded ? chart.color : undefined }}
+                className={expanded ? '' : 'text-zinc-500'}
+                aria-hidden="true"
+              />
+              <span
+                className="font-mono text-[10px] uppercase tracking-widest transition-colors duration-300"
+                style={{ color: expanded ? chart.color : '#71717a' }}
+              >
+                {chart.label}
+              </span>
+            </div>
+            <p className="text-2xl font-bold text-white font-mono tabular-nums">
+              {chart.metric}
+            </p>
+            <p className="text-[10px] text-zinc-600 font-mono">{chart.sub}</p>
+            <MiniBarChart bars={chart.bars} color={chart.color} animate={inView} />
+          </div>
 
-      <AnimatePresence>
-        {hovered && detail && (
           <motion.div
-            key="detail"
-            initial={{ opacity: 0, x: isLast ? 16 : -16, scale: 0.97 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
-            exit={{ opacity: 0, x: isLast ? 12 : -12, scale: 0.98 }}
-            transition={{ duration: 0.38, ease: EASE }}
-            className={`absolute z-30 w-[min(260px,72vw)] sm:w-[240px] ${
-              isLast ? 'right-full mr-2 sm:mr-3' : 'left-full ml-2 sm:ml-3'
-            }`}
-            style={{ top: -18 }}
-            aria-hidden="true"
+            layout
+            className="overflow-hidden border-t sm:border-t-0 sm:border-l border-white/[0.07]"
+            initial={false}
+            animate={{
+              flex: expanded ? 1 : 0,
+              opacity: expanded ? 1 : 0,
+            }}
+            transition={{ duration: 0.42, ease: EASE }}
+            aria-hidden={!expanded}
           >
-            <div
-              className="overflow-hidden rounded-lg border bg-[#0c0c0f]/98 backdrop-blur-md shadow-[0_20px_60px_rgba(0,0,0,0.55)]"
-              style={{ borderColor: `${chart.color}33` }}
-            >
-              <div
-                className="border-b px-4 py-2.5"
-                style={{
-                  borderColor: `${chart.color}22`,
-                  background: `linear-gradient(90deg, ${chart.color}12, transparent)`,
-                }}
+            {detail && (
+              <motion.div
+                className="h-full p-5"
+                initial={false}
+                animate={{ x: expanded ? 0 : 24 }}
+                transition={{ duration: 0.4, ease: EASE }}
               >
                 <p
-                  className="font-mono text-[9px] uppercase tracking-widest"
+                  className="font-mono text-[9px] uppercase tracking-widest mb-3"
                   style={{ color: chart.color }}
                 >
                   {chart.label} · deep read
                 </p>
-              </div>
+                <p className="text-sm font-semibold text-white leading-snug">
+                  {detail.headline}
+                </p>
+                <p className="mt-1.5 text-[11px] leading-relaxed text-zinc-400">
+                  {detail.body}
+                </p>
 
-              <div className="space-y-3 p-4">
-                <div>
-                  <p className="text-sm font-semibold text-white leading-snug">
-                    {detail.headline}
-                  </p>
-                  <p className="mt-1.5 text-[11px] leading-relaxed text-zinc-400">
-                    {detail.body}
-                  </p>
+                <div className="mt-3 rounded-md border border-white/[0.06] bg-white/[0.02] p-2.5">
+                  <DetailSparkline
+                    path={detail.sparkline}
+                    color={chart.color}
+                    id={sparkId}
+                  />
                 </div>
 
-                <div className="rounded-md border border-white/[0.06] bg-white/[0.02] p-2.5">
-                  <DetailSparkline path={detail.sparkline} color={chart.color} id={sparkId} />
-                </div>
-
-                <div className="space-y-1.5">
+                <div className="mt-3 space-y-1.5">
                   {detail.stats.map((stat) => (
                     <div
                       key={stat.label}
@@ -256,11 +275,11 @@ export default function TerminalMetricCard({
                     </div>
                   ))}
                 </div>
-              </div>
-            </div>
+              </motion.div>
+            )}
           </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+        </div>
+      </motion.div>
+    </motion.div>
   )
 }

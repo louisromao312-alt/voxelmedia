@@ -21,7 +21,7 @@ export default function IndustryGap() {
 
   return (
     <SectionReveal
-      className="relative px-4 py-28 md:py-36 bg-[#0A0A0C]"
+      className="relative px-4 py-28 md:py-36 bg-[#0A0A0C] overflow-visible"
       aria-labelledby="industry-gap-heading"
     >
       <div

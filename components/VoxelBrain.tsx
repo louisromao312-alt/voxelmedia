@@ -8,15 +8,15 @@ export default function VoxelBrain() {
 
   return (
     <div
-      className="pointer-events-none absolute inset-0 z-[1] flex items-center justify-center overflow-hidden"
+      className="pointer-events-none absolute inset-0 z-[1] flex items-center justify-center overflow-visible"
       aria-hidden="true"
     >
       <div
         className="relative flex items-center justify-center"
         style={{
-          width: 'min(380px, 88vw)',
-          height: 'min(380px, 70vw)',
-          perspective: 1000,
+          width: 'min(780px, 120vw)',
+          height: 'min(780px, 95vw)',
+          perspective: 1200,
         }}
       >
         <div className="voxel-brain-rotate" style={{ transformStyle: 'preserve-3d' }}>
@@ -25,10 +25,10 @@ export default function VoxelBrain() {
               key={i}
               className="absolute"
               style={{
-                width: 6,
-                height: 6,
-                left: -3,
-                top: -3,
+                width: 9,
+                height: 9,
+                left: -4.5,
+                top: -4.5,
                 transform: `translate3d(${v.x}px, ${v.y}px, ${v.z}px)`,
                 transformStyle: 'preserve-3d',
               }}
@@ -58,7 +58,7 @@ export default function VoxelBrain() {
         className="absolute inset-0"
         style={{
           background:
-            'radial-gradient(ellipse 55% 50% at 50% 48%, transparent 0%, rgba(10,10,12,0.55) 55%, rgba(10,10,12,0.92) 100%)',
+            'radial-gradient(ellipse 72% 68% at 50% 48%, transparent 0%, rgba(10,10,12,0.45) 58%, rgba(10,10,12,0.88) 100%)',
         }}
       />
       <div

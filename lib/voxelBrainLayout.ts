@@ -9,7 +9,7 @@ export type BrainVoxel = {
 export function generateBrainVoxels(): BrainVoxel[] {
   const voxels: BrainVoxel[] = []
   const step = 0.17
-  const scale = 5.2
+  const scale = 9.8
 
   for (let xi = -15; xi <= 15; xi++) {
     for (let yi = -13; yi <= 15; yi++) {

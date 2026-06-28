@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react'
 import { motion, useMotionValue, useSpring } from 'framer-motion'
 
+const OFFSET = { x: 14, y: 16 }
+
 export default function VoxelCursor() {
   const mouseX = useMotionValue(-100)
   const mouseY = useMotionValue(-100)
@@ -18,8 +20,8 @@ export default function VoxelCursor() {
     if (coarse) return
 
     const onMove = (e: MouseEvent) => {
-      mouseX.set(e.clientX)
-      mouseY.set(e.clientY)
+      mouseX.set(e.clientX + OFFSET.x)
+      mouseY.set(e.clientY + OFFSET.y)
       if (!visible) setVisible(true)
     }
 

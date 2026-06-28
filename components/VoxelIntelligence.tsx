@@ -1,7 +1,7 @@
 'use client'
 
-import { useRef } from 'react'
-import { motion, useInView } from 'framer-motion'
+import { useRef, useState } from 'react'
+import { motion, useInView, LayoutGroup } from 'framer-motion'
 import { Shield, Zap, Users } from 'lucide-react'
 import SectionReveal, { EASE, revealTransition } from '@/components/SectionReveal'
 import TerminalMetricCard from '@/components/TerminalMetricCard'
@@ -46,6 +46,7 @@ const CHARTS = [
 export default function VoxelIntelligence() {
   const terminalRef = useRef<HTMLDivElement>(null)
   const terminalInView = useInView(terminalRef, { once: false, amount: 0.2 })
+  const [expandedMetric, setExpandedMetric] = useState<number | null>(null)
   const { role } = useUserJourney()
 
   const highlightedRow = role === 'creator' ? 0 : role === 'brand' ? 2 : -1
@@ -90,7 +91,7 @@ export default function VoxelIntelligence() {
 
         <div
           ref={terminalRef}
-          className="rounded-xl border border-white/[0.08] bg-[#0A0A0C] shadow-[0_0_80px_rgba(0,0,0,0.6)]"
+          className="rounded-xl border border-white/[0.08] bg-[#0A0A0C] shadow-[0_0_80px_rgba(0,0,0,0.6)] overflow-visible"
         >
           <div className="overflow-hidden rounded-t-xl">
           <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.06] bg-white/[0.02]">
@@ -124,7 +125,15 @@ export default function VoxelIntelligence() {
             </div>
           </div>
 
-          <div className="overflow-x-auto">
+          <motion.div
+            className="overflow-x-auto"
+            animate={{
+              y: expandedMetric !== null ? -20 : 0,
+              opacity: expandedMetric !== null ? 0.32 : 1,
+              scale: expandedMetric !== null ? 0.98 : 1,
+            }}
+            transition={{ duration: 0.45, ease: EASE }}
+          >
             <table className="w-full text-left font-mono text-xs">
               <thead>
                 <tr className="border-b border-white/[0.06] text-zinc-500 uppercase tracking-wider">
@@ -177,23 +186,30 @@ export default function VoxelIntelligence() {
                 ))}
               </tbody>
             </table>
-          </div>
+          </motion.div>
           </div>
 
-          <div className="relative overflow-visible border-t border-white/[0.06] pb-2">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-white/[0.06]">
-            {CHARTS.map((chart, i) => (
-              <TerminalMetricCard
-                key={chart.label}
-                chart={chart}
-                index={i}
-                inView={terminalInView}
-                highlighted={i === highlightedChart}
-                role={role}
-                isLast={i === CHARTS.length - 1}
-              />
-            ))}
-            </div>
+          <div className="relative overflow-visible border-t border-white/[0.06]">
+            <LayoutGroup>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-white/[0.06] items-end">
+                {CHARTS.map((chart, i) => (
+                  <TerminalMetricCard
+                    key={chart.label}
+                    chart={chart}
+                    index={i}
+                    total={CHARTS.length}
+                    inView={terminalInView}
+                    highlighted={i === highlightedChart}
+                    role={role}
+                    expanded={expandedMetric === i}
+                    dimmed={expandedMetric !== null && expandedMetric !== i}
+                    onHoverChange={(active) =>
+                      setExpandedMetric(active ? i : null)
+                    }
+                  />
+                ))}
+              </div>
+            </LayoutGroup>
           </div>
         </div>
       </div>
