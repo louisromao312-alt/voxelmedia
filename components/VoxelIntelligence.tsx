@@ -60,9 +60,19 @@ export default function VoxelIntelligence() {
 
   return (
     <SectionReveal
-      className="relative px-4 py-24 md:py-32 bg-[#0A0A0C]"
+      className="relative px-4 py-24 md:py-32 bg-[#0A0A0C] overflow-visible"
       aria-labelledby="voxel-terminal-heading"
     >
+      {/* Soft continuation of brain glow from section above */}
+      <div
+        className="pointer-events-none absolute inset-x-0 -top-40 h-80 z-0"
+        aria-hidden="true"
+        style={{
+          background:
+            'radial-gradient(ellipse 70% 90% at 50% 0%, rgba(74,222,128,0.1) 0%, rgba(74,222,128,0.04) 45%, transparent 75%)',
+        }}
+      />
+
       <div className="relative z-10 max-w-6xl mx-auto">
         <div className="text-center mb-12">
           <div className="flex justify-center mb-3">

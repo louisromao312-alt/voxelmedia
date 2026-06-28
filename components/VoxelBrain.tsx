@@ -94,57 +94,68 @@ export default function VoxelBrain() {
   const voxels = useMemo(() => generateBrainVoxels(), [])
 
   return (
-    <div
-      className="pointer-events-none absolute inset-0 z-[1] flex items-center justify-center overflow-visible"
-      aria-hidden="true"
-    >
+    <>
+      {/* Ambient glow — extends beyond section into Terminal */}
       <div
-        className="relative flex items-center justify-center"
+        className="pointer-events-none absolute left-1/2 top-[52%] z-0 -translate-x-1/2 -translate-y-1/2"
+        aria-hidden="true"
         style={{
-          width: 'min(2200px, 200vw)',
-          height: 'min(2000px, 190vw)',
-          perspective: 1800,
-          contain: 'layout style',
+          width: 'min(3200px, 280vw)',
+          height: 'min(3200px, 260vh)',
+          background:
+            'radial-gradient(ellipse 48% 52% at 50% 44%, rgba(74,222,128,0.28) 0%, rgba(74,222,128,0.12) 32%, rgba(74,222,128,0.05) 52%, transparent 72%)',
+          filter: 'blur(72px)',
         }}
+      />
+
+      <div
+        className="pointer-events-none absolute inset-x-0 -top-[12vh] -bottom-[45vh] z-[1] flex items-center justify-center overflow-visible"
+        aria-hidden="true"
       >
         <div
-          className="pointer-events-none absolute rounded-full"
+          className="relative flex items-center justify-center"
           style={{
-            width: '46%',
-            height: '46%',
-            background:
-              'radial-gradient(circle, rgba(74,222,128,0.34) 0%, rgba(74,222,128,0.12) 38%, transparent 70%)',
-            filter: 'blur(44px)',
-          }}
-        />
-
-        <div
-          className="voxel-brain-rotate"
-          style={{
-            transformStyle: 'preserve-3d',
-            willChange: 'transform',
+            width: 'min(2200px, 200vw)',
+            height: 'min(2000px, 190vw)',
+            perspective: 1800,
+            contain: 'layout style',
           }}
         >
-          {voxels.map((v) => (
-            <VoxelCube key={`${v.x}-${v.y}-${v.z}`} v={v} size={BRAIN_BLOCK_SIZE} />
-          ))}
-        </div>
-      </div>
+          <div
+            className="pointer-events-none absolute rounded-full"
+            style={{
+              width: '55%',
+              height: '55%',
+              background:
+                'radial-gradient(circle, rgba(74,222,128,0.38) 0%, rgba(74,222,128,0.14) 40%, transparent 72%)',
+              filter: 'blur(52px)',
+            }}
+          />
 
-      <div
-        className="absolute inset-0"
-        style={{
-          background:
-            'radial-gradient(ellipse 82% 76% at 50% 48%, transparent 0%, rgba(10,10,12,0.18) 64%, rgba(10,10,12,0.78) 100%)',
-        }}
-      />
-      <div
-        className="absolute inset-0"
-        style={{
-          background:
-            'radial-gradient(circle at 50% 50%, rgba(74,222,128,0.14) 0%, transparent 58%)',
-        }}
-      />
-    </div>
+          <div
+            className="voxel-brain-rotate"
+            style={{
+              transformStyle: 'preserve-3d',
+              willChange: 'transform',
+            }}
+          >
+            {voxels.map((v) => (
+              <VoxelCube key={`${v.x}-${v.y}-${v.z}`} v={v} size={BRAIN_BLOCK_SIZE} />
+            ))}
+          </div>
+        </div>
+
+        {/* Side softening only — no hard bottom edge */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              'radial-gradient(ellipse 88% 80% at 50% 46%, transparent 0%, rgba(10,10,12,0.12) 68%, rgba(10,10,12,0.45) 100%)',
+            maskImage: 'linear-gradient(to bottom, black 0%, black 72%, transparent 100%)',
+            WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 72%, transparent 100%)',
+          }}
+        />
+      </div>
+    </>
   )
 }
