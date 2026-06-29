@@ -9,9 +9,9 @@ export default function IndustryGapVillagers() {
   const inView = useInView(ref, { once: false, amount: 0.55 })
 
   return (
-    <div ref={ref} className="pointer-events-none absolute inset-0 z-[5] overflow-visible">
+    <div ref={ref} className="pointer-events-none absolute inset-0 z-[1] overflow-visible">
       <motion.div
-        className="absolute left-1/2 top-1/2 w-[400px] sm:w-[480px] md:w-[560px] lg:w-[640px]"
+        className="absolute left-1/2 top-1/2 w-[133px] sm:w-[160px] md:w-[187px] lg:w-[213px]"
         initial={{ opacity: 0, x: '-50%', y: 140 }}
         animate={
           inView

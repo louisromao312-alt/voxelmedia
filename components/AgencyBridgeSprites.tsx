@@ -82,9 +82,9 @@ export function BrandSprite({ inView }: { inView: boolean }) {
   return (
     <LevitateSprite
       src="/agency-bridge/brand.png"
-      className="absolute z-20 top-1/2 -translate-y-1/2 -left-4 w-[200px] sm:w-[240px] md:-left-24 md:w-[280px] lg:-left-32 lg:w-[320px]"
+      className="absolute z-30 bottom-0 left-0 w-[160px] sm:w-[200px] md:-left-10 md:w-[240px] lg:-left-14 lg:w-[280px]"
       inView={inView}
-      enter={{ x: -64, y: 32 }}
+      enter={{ x: -48, y: 32 }}
       floatDelay={0.15}
       floatY={12}
     />
@@ -109,9 +109,9 @@ export function CreatorSprite({ inView }: { inView: boolean }) {
   return (
     <LevitateSprite
       src="/agency-bridge/creator.png"
-      className="absolute z-20 top-1/2 -translate-y-1/2 -right-4 w-[200px] sm:w-[240px] md:-right-24 md:w-[280px] lg:-right-32 lg:w-[320px]"
+      className="absolute z-30 bottom-0 right-0 w-[160px] sm:w-[200px] md:-right-10 md:w-[240px] lg:-right-14 lg:w-[280px]"
       inView={inView}
-      enter={{ x: 64, y: 32 }}
+      enter={{ x: 48, y: 32 }}
       floatDelay={0.25}
       floatY={12}
     />
