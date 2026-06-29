@@ -61,7 +61,7 @@ export default function AgencyBridge() {
           <div className="relative min-h-[260px] overflow-visible md:min-h-[300px]">
             <BrandSprite inView={bridgeInView} />
             <motion.div
-            className={`relative z-10 flex min-h-[260px] flex-col items-center justify-center gap-4 rounded-2xl border bg-white/[0.02] p-6 pt-36 sm:p-8 sm:pt-40 md:min-h-[300px] md:items-end md:justify-center md:p-8 md:pt-8 md:pl-[46%] md:text-right text-center transition-all duration-500 cursor-pointer select-none ${
+            className={`relative z-10 flex min-h-[260px] flex-col items-center justify-center gap-4 rounded-2xl border bg-white/[0.02] p-6 pt-36 sm:p-8 sm:pt-40 md:min-h-[300px] md:items-end md:justify-center md:p-8 md:pt-8 md:pl-[32%] md:text-right text-center transition-all duration-500 cursor-pointer select-none ${
               brandEmphasis
                 ? 'border-blue-400/30 bg-blue-400/5 scale-[1.02] shadow-[0_0_40px_rgba(96,165,250,0.08)]'
                 : creatorEmphasis
@@ -77,9 +77,9 @@ export default function AgencyBridge() {
             <div className="flex items-center justify-center w-14 h-14 rounded-xl border border-white/10 bg-white/[0.04] text-blue-400">
               <Building2 size={24} aria-hidden="true" />
             </div>
-            <div className="w-full max-w-none md:max-w-[54%]">
+            <div className="w-full md:max-w-[68%]">
               <h3 className="text-xl font-bold text-white">Brand</h3>
-              <p className="text-sm text-zinc-400 mt-1 text-balance">
+              <p className="text-sm text-zinc-400 mt-1 leading-relaxed">
                 Campaign briefs, audience targeting, and ROI projections —
                 backed by verified Minecraft market data.
               </p>
@@ -107,7 +107,7 @@ export default function AgencyBridge() {
           <div className="relative min-h-[260px] overflow-visible md:min-h-[300px]">
           <CreatorSprite inView={bridgeInView} />
           <motion.div
-            className={`relative z-10 flex min-h-[260px] flex-col items-center justify-center gap-4 rounded-2xl border bg-white/[0.02] p-6 pt-36 sm:p-8 sm:pt-40 md:min-h-[300px] md:items-start md:justify-center md:p-8 md:pt-8 md:pr-[46%] md:text-left text-center transition-all duration-500 cursor-pointer select-none ${
+            className={`relative z-10 flex min-h-[260px] flex-col items-center justify-center gap-4 rounded-2xl border bg-white/[0.02] p-6 pt-36 sm:p-8 sm:pt-40 md:min-h-[300px] md:items-start md:justify-center md:p-8 md:pt-8 md:pr-[32%] md:text-left text-center transition-all duration-500 cursor-pointer select-none ${
               creatorEmphasis
                 ? 'border-green-400/30 bg-green-400/5 scale-[1.02] shadow-[0_0_40px_rgba(74,222,128,0.08)]'
                 : brandEmphasis
@@ -123,9 +123,9 @@ export default function AgencyBridge() {
             <div className="flex items-center justify-center w-14 h-14 rounded-xl border border-white/10 bg-white/[0.04] text-green-400">
               <Users size={24} aria-hidden="true" />
             </div>
-            <div className="w-full max-w-none md:max-w-[54%]">
+            <div className="w-full md:max-w-[68%]">
               <h3 className="text-xl font-bold text-white">Creator</h3>
-              <p className="text-sm text-zinc-400 mt-1 text-balance">
+              <p className="text-sm text-zinc-400 mt-1 leading-relaxed">
                 Trend signals, compliance badges, and brand-match scoring —
                 so you build what the market actually wants.
               </p>

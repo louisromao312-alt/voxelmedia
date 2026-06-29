@@ -72,7 +72,7 @@ export default function IndustryGap() {
           className="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight mb-6"
         >
           The Minecraft creator economy runs on intuition.
-          <span className="block text-green-400/75 mt-2">Not intelligence.</span>
+          <span className="block text-zinc-400 mt-2">Not intelligence.</span>
         </h2>
         <p
           id="industry-gap-body"
