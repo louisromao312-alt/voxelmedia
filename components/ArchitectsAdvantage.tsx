@@ -51,18 +51,20 @@ function MetricCard({
   highlighted,
   role,
   onBurst,
+  showCrown = false,
 }: (typeof METRICS)[number] & {
   index: number
   inView: boolean
   highlighted: boolean
   role: string | null
   onBurst: (x: number, y: number) => void
+  showCrown?: boolean
 }) {
   const count = useCountUp(value, inView, 1.6 + index * 0.15)
 
   return (
     <motion.div
-      className={`text-center p-6 rounded-xl border transition-all duration-500 cursor-pointer select-none ${
+      className={`relative overflow-visible text-center p-6 rounded-xl border transition-all duration-500 cursor-pointer select-none ${
         highlighted
           ? role === 'brand'
             ? 'border-blue-400/30 bg-blue-400/5 shadow-[0_0_30px_rgba(96,165,250,0.08)]'
@@ -80,6 +82,16 @@ function MetricCard({
       onPointerDown={(e) => onBurst(e.clientX, e.clientY)}
       whileTap={{ scale: 0.95 }}
     >
+      {showCrown && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src="/architects-advantage/crown.png"
+          alt=""
+          draggable={false}
+          className="pointer-events-none absolute -left-3 -top-7 z-10 h-auto w-[4.5rem] sm:-left-4 sm:-top-8 sm:w-[5.25rem]"
+          aria-hidden="true"
+        />
+      )}
       <p className="flex items-baseline justify-center gap-1.5 whitespace-nowrap text-4xl sm:text-5xl font-bold text-white font-mono tabular-nums leading-none">
         <span>{count}</span>
         {unit && (
@@ -145,7 +157,7 @@ export default function ArchitectsAdvantage() {
 
   return (
     <SectionReveal
-      className="relative px-4 py-24 md:py-32 bg-[#0A0A0C] overflow-hidden"
+      className="relative px-4 py-24 md:py-32 bg-[#0A0A0C] overflow-visible"
       aria-labelledby="architects-advantage-heading"
     >
       <div className="max-w-5xl mx-auto">
@@ -175,7 +187,7 @@ export default function ArchitectsAdvantage() {
 
         <div
           ref={metricsRef}
-          className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-12"
+          className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-12 overflow-visible"
           role="list"
           aria-label="Industry experience metrics"
         >
@@ -188,6 +200,7 @@ export default function ArchitectsAdvantage() {
               highlighted={i === highlightedIndex}
               role={role}
               onBurst={triggerBurst}
+              showCrown={i === 0}
             />
           ))}
         </div>
