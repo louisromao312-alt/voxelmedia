@@ -1,9 +1,9 @@
-import { Bungee } from 'next/font/google'
+import localFont from 'next/font/local'
 
-const bungee = Bungee({
-  weight: '400',
-  subsets: ['latin'],
+const minecraftTen = localFont({
+  src: '../public/fonts/MinecraftTen.woff',
   display: 'swap',
+  variable: '--font-minecraft',
 })
 
 function MinecraftLine({ children }: { children: string }) {
@@ -29,7 +29,7 @@ export default function MinecraftHeadline({
   return (
     <h1
       id={id}
-      className={`${bungee.className} minecraft-headline w-full text-center`}
+      className={`${minecraftTen.className} minecraft-headline w-full text-center`}
       aria-label={text.replace('\n', ' ')}
     >
       {lines.map((line) => (

@@ -129,15 +129,16 @@ body {
 
 /* Minecraft-style 3D gold headline (hero) */
 .minecraft-headline {
+  font-family: var(--font-minecraft), 'MinecraftTen', sans-serif;
   line-height: 0.95;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.04em;
 }
 
 .minecraft-title-line {
   position: relative;
   display: block;
-  margin-bottom: 0.08em;
-  font-size: clamp(2.1rem, 5.6vw, 4.15rem);
+  margin-bottom: 0.12em;
+  font-size: clamp(1.85rem, 5vw, 3.5rem);
   text-transform: uppercase;
 }
 

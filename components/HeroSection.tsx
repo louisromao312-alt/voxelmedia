@@ -1,6 +1,5 @@
 'use client'
 
-import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useUserJourney, HERO_COPY } from '@/context/UserJourneyContext'
 import JourneySelector from '@/components/JourneySelector'
@@ -24,14 +23,14 @@ export default function HeroSection() {
       aria-labelledby="hero-heading"
     >
       <div className="absolute inset-0" aria-hidden="true">
-        <Image
-          src="/hero/background.png"
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/hero/background.jpg"
           alt=""
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-center"
+          fetchPriority="high"
+          decoding="async"
           draggable={false}
+          className="absolute inset-0 h-full w-full object-cover object-center [image-rendering:auto]"
         />
       </div>
 
