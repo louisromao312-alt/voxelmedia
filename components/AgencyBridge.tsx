@@ -77,9 +77,9 @@ export default function AgencyBridge() {
             <div className="flex items-center justify-center w-14 h-14 rounded-xl border border-white/10 bg-white/[0.04] text-blue-400">
               <Building2 size={24} aria-hidden="true" />
             </div>
-            <div className="w-full md:max-w-[68%]">
+            <div className="w-full">
               <h3 className="text-xl font-bold text-white">Brand</h3>
-              <p className="text-sm text-zinc-400 mt-1 leading-relaxed">
+              <p className="mt-1 max-w-none text-sm leading-snug text-zinc-400 md:ml-auto md:max-w-[35ch]">
                 Campaign briefs, audience targeting, and ROI projections —
                 backed by verified Minecraft market data.
               </p>
@@ -123,9 +123,9 @@ export default function AgencyBridge() {
             <div className="flex items-center justify-center w-14 h-14 rounded-xl border border-white/10 bg-white/[0.04] text-green-400">
               <Users size={24} aria-hidden="true" />
             </div>
-            <div className="w-full md:max-w-[68%]">
+            <div className="w-full">
               <h3 className="text-xl font-bold text-white">Creator</h3>
-              <p className="text-sm text-zinc-400 mt-1 leading-relaxed">
+              <p className="mt-1 max-w-none text-sm leading-snug text-zinc-400 md:max-w-[35ch]">
                 Trend signals, compliance badges, and brand-match scoring —
                 so you build what the market actually wants.
               </p>
