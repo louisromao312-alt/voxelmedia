@@ -127,47 +127,59 @@ body {
   opacity: 1;
 }
 
-/* Join Voxel — 5s liquid fill on hover */
+/* Join Voxel — idle ripple + 5s liquid fill on hover */
+.join-voxel-btn .join-voxel-wave-1 {
+  animation: join-voxel-wave-1 2.6s ease-in-out infinite;
+}
+
+.join-voxel-btn .join-voxel-wave-2 {
+  animation: join-voxel-wave-2 3.2s ease-in-out infinite;
+}
+
+.join-voxel-btn .join-voxel-wave-3 {
+  animation: join-voxel-wave-3 3.8s ease-in-out infinite;
+}
+
 .join-voxel-btn:hover .join-voxel-wave-1 {
-  animation: join-voxel-wave-1 2.2s ease-in-out infinite;
+  animation-duration: 2.2s;
 }
 
 .join-voxel-btn:hover .join-voxel-wave-2 {
-  animation: join-voxel-wave-2 2.8s ease-in-out infinite;
+  animation-duration: 2.8s;
 }
 
 .join-voxel-btn:hover .join-voxel-wave-3 {
-  animation: join-voxel-wave-3 3.4s ease-in-out infinite;
+  animation-duration: 3.4s;
 }
 
 @keyframes join-voxel-wave-1 {
   0%,
   100% {
-    transform: translateX(-7%) scaleY(1);
+    transform: translateX(-5%) scaleY(0.92);
   }
   50% {
-    transform: translateX(7%) scaleY(1.12);
+    transform: translateX(5%) scaleY(1.05);
   }
 }
 
 @keyframes join-voxel-wave-2 {
   0%,
   100% {
-    transform: translateX(6%) scaleY(0.92);
+    transform: translateX(4%) scaleY(0.88);
   }
   50% {
-    transform: translateX(-8%) scaleY(1.08);
+    transform: translateX(-6%) scaleY(1.02);
   }
 }
 
 @keyframes join-voxel-wave-3 {
   0%,
   100% {
-    transform: translateX(-4%) translateY(0);
-    opacity: 0.35;
+    transform: translateX(-3%) translateY(0);
+    opacity: 0.45;
   }
   50% {
-    transform: translateX(5%) translateY(-2px);
-    opacity: 0.55;
+    transform: translateX(4%) translateY(-1px);
+    opacity: 0.7;
   }
 }

@@ -116,20 +116,23 @@ export default function HeroSection() {
   return (
     <section
       id="hero-section"
-      className="relative min-h-[92vh] overflow-hidden bg-[#0A0A0C]"
+      className="relative min-h-[92vh] w-full overflow-hidden bg-[#0A0A0C] md:min-h-[max(92vh,56.25vw)]"
       aria-labelledby="hero-heading"
     >
-      <div className="absolute inset-0" aria-hidden="true">
+      <div
+        className="absolute inset-0 flex items-center justify-center"
+        aria-hidden="true"
+      >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/hero/background.jpg"
-          srcSet="/hero/background.jpg 2048w"
-          sizes="100vw"
+          width={2048}
+          height={1152}
           alt=""
           fetchPriority="high"
-          decoding="async"
+          decoding="sync"
           draggable={false}
-          className="absolute inset-0 h-full w-full object-cover object-center"
+          className="h-full w-full object-contain object-center"
         />
       </div>
 
@@ -138,7 +141,7 @@ export default function HeroSection() {
         aria-hidden="true"
         style={{
           background:
-            'radial-gradient(ellipse 80% 70% at 50% 48%, rgba(10,10,12,0.28) 0%, rgba(10,10,12,0.58) 100%)',
+            'radial-gradient(ellipse 80% 70% at 50% 48%, rgba(10,10,12,0.18) 0%, rgba(10,10,12,0.42) 100%)',
         }}
       />
 
@@ -147,33 +150,33 @@ export default function HeroSection() {
         aria-hidden="true"
         style={{
           background:
-            'linear-gradient(to top, rgba(10,10,12,0.62) 0%, transparent 32%, transparent 88%, rgba(10,10,12,0.18) 100%)',
+            'linear-gradient(to top, rgba(10,10,12,0.5) 0%, transparent 28%, transparent 90%, rgba(10,10,12,0.12) 100%)',
         }}
       />
 
       <div
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-[min(42vh,360px)]"
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-[min(32vh,280px)]"
         aria-hidden="true"
       >
         <div
-          className="absolute inset-0 backdrop-blur-[8px]"
+          className="absolute inset-0 backdrop-blur-[6px]"
           style={{
             WebkitMaskImage:
-              'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.35) 38%, black 100%)',
+              'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.3) 42%, black 100%)',
             maskImage:
-              'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.35) 38%, black 100%)',
+              'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.3) 42%, black 100%)',
           }}
         />
         <div
           className="absolute inset-0"
           style={{
             background:
-              'linear-gradient(to bottom, transparent 0%, rgba(10,10,12,0.45) 42%, rgba(10,10,12,0.88) 72%, #0A0A0C 100%)',
+              'linear-gradient(to bottom, transparent 0%, rgba(10,10,12,0.35) 48%, rgba(10,10,12,0.82) 78%, #0A0A0C 100%)',
           }}
         />
       </div>
 
-      <div className="relative z-10 flex min-h-[92vh] w-full flex-col items-center justify-center gap-5">
+      <div className="relative z-10 flex min-h-[92vh] w-full flex-col items-center justify-center gap-5 md:min-h-[max(92vh,56.25vw)]">
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -195,45 +198,38 @@ export default function HeroSection() {
           />
         </div>
 
-        <div className="relative mx-4 w-full max-w-6xl sm:mx-6">
-          <div
-            className="pointer-events-none absolute inset-0 rounded-2xl border border-white/[0.07] bg-[#0A0A0C]/42 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] backdrop-blur-[10px] sm:rounded-3xl"
-            aria-hidden="true"
-          />
+        <div className="flex w-full max-w-6xl flex-col items-center gap-6 px-4 sm:px-6">
+          <p className="mx-auto max-w-2xl text-center text-base leading-relaxed text-zinc-100/95 sm:text-lg">
+            {copy.sub}
+          </p>
 
-          <div className="relative z-10 flex flex-col items-center gap-6 px-5 py-8 sm:px-10 sm:py-10">
-            <p className="mx-auto max-w-2xl text-center text-base leading-relaxed text-zinc-100/95 sm:text-lg">
-              {copy.sub}
-            </p>
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.45, duration: 0.6, ease: EASE }}
+            className="flex flex-col items-center gap-4"
+          >
+            <JourneySelector />
 
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.45, duration: 0.6, ease: EASE }}
-              className="flex flex-col items-center gap-4"
-            >
-              <JourneySelector />
+            <AnimatePresence>
+              {role && (
+                <motion.button
+                  key="continue"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
+                  transition={{ duration: 0.4, ease: EASE }}
+                  onClick={scrollToWaitlist}
+                  className="cursor-pointer text-sm text-zinc-300 underline decoration-zinc-600 underline-offset-4 transition-colors hover:text-white hover:decoration-zinc-300"
+                  aria-label="Continue to waitlist signup"
+                >
+                  Continue to join Voxel →
+                </motion.button>
+              )}
+            </AnimatePresence>
+          </motion.div>
 
-              <AnimatePresence>
-                {role && (
-                  <motion.button
-                    key="continue"
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -6 }}
-                    transition={{ duration: 0.4, ease: EASE }}
-                    onClick={scrollToWaitlist}
-                    className="cursor-pointer text-sm text-zinc-300 underline decoration-zinc-600 underline-offset-4 transition-colors hover:text-white hover:decoration-zinc-300"
-                    aria-label="Continue to waitlist signup"
-                  >
-                    Continue to join Voxel →
-                  </motion.button>
-                )}
-              </AnimatePresence>
-            </motion.div>
-
-            <WaitlistSocialProof />
-          </div>
+          <WaitlistSocialProof />
         </div>
       </div>
     </section>
