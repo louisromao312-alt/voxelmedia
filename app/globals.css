@@ -126,3 +126,68 @@ body {
 .spotlight-card:hover .spotlight-border {
   opacity: 1;
 }
+
+/* Minecraft-style 3D gold headline (hero) */
+.minecraft-headline {
+  line-height: 0.95;
+  letter-spacing: 0.02em;
+}
+
+.minecraft-title-line {
+  position: relative;
+  display: block;
+  margin-bottom: 0.08em;
+  font-size: clamp(2.1rem, 5.6vw, 4.15rem);
+  text-transform: uppercase;
+}
+
+.minecraft-title-extrude,
+.minecraft-title-face {
+  display: block;
+  white-space: nowrap;
+}
+
+.minecraft-title-extrude {
+  position: absolute;
+  inset: 0;
+  color: #3d2800;
+  -webkit-text-stroke: 3px #000;
+  text-shadow:
+    2px 2px 0 #4a3200,
+    3px 3px 0 #3d2800,
+    4px 4px 0 #302000,
+    5px 5px 0 #241800,
+    6px 6px 0 #181000;
+  transform: translate(3px, 3px);
+}
+
+.minecraft-title-face {
+  position: relative;
+  background: linear-gradient(
+    180deg,
+    #fff8c8 0%,
+    #fde68a 18%,
+    #facc15 42%,
+    #eab308 68%,
+    #ca8a04 88%,
+    #a16207 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-stroke: 2.5px #000;
+  paint-order: stroke fill;
+  filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.45));
+}
+
+@media (max-width: 640px) {
+  .minecraft-title-line {
+    font-size: clamp(1.65rem, 8.5vw, 2.35rem);
+    white-space: normal;
+  }
+
+  .minecraft-title-extrude,
+  .minecraft-title-face {
+    white-space: normal;
+  }
+}

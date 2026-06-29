@@ -11,7 +11,7 @@ export default function TerminalVillager() {
   return (
     <div
       ref={ref}
-      className="pointer-events-none relative z-[1] mx-auto -mb-2 w-[148px] sm:-mb-3 sm:w-[176px] md:-mb-4 md:w-[204px] lg:w-[232px]"
+      className="pointer-events-none relative z-[1] mx-auto -mb-2 w-[124px] sm:-mb-3 sm:w-[148px] md:-mb-4 md:w-[172px] lg:w-[196px]"
       aria-hidden="true"
     >
       <motion.div
@@ -20,14 +20,14 @@ export default function TerminalVillager() {
         transition={{ duration: 0.9, ease: EASE }}
         className="relative"
       >
-        {/* Sharp layer — fades out toward bottom */}
+        {/* Sharp layer — stays crisp until near the bottom edge */}
         <div
           className="relative"
           style={{
             WebkitMaskImage:
-              'linear-gradient(to bottom, #000 0%, #000 58%, transparent 86%)',
+              'linear-gradient(to bottom, #000 0%, #000 76%, rgba(0,0,0,0.9) 90%, transparent 98%)',
             maskImage:
-              'linear-gradient(to bottom, #000 0%, #000 58%, transparent 86%)',
+              'linear-gradient(to bottom, #000 0%, #000 76%, rgba(0,0,0,0.9) 90%, transparent 98%)',
           }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -39,14 +39,14 @@ export default function TerminalVillager() {
           />
         </div>
 
-        {/* Soft blur tail blending into The Terminal */}
+        {/* Soft blur tail — only the last strip before the image ends */}
         <div
-          className="absolute inset-x-0 bottom-0 h-[38%] overflow-hidden"
+          className="absolute inset-x-0 bottom-0 h-[22%] overflow-hidden"
           style={{
             WebkitMaskImage:
-              'linear-gradient(to bottom, transparent 0%, #000 45%, #000 100%)',
+              'linear-gradient(to bottom, transparent 0%, transparent 42%, rgba(0,0,0,0.55) 72%, #000 100%)',
             maskImage:
-              'linear-gradient(to bottom, transparent 0%, #000 45%, #000 100%)',
+              'linear-gradient(to bottom, transparent 0%, transparent 42%, rgba(0,0,0,0.55) 72%, #000 100%)',
           }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -55,13 +55,13 @@ export default function TerminalVillager() {
             alt=""
             draggable={false}
             aria-hidden="true"
-            className="h-auto w-full blur-[3px] brightness-90"
+            className="h-auto w-full blur-[6px] brightness-95"
           />
         </div>
 
         {/* Section-color wash into heading */}
         <div
-          className="absolute inset-x-0 bottom-0 h-[34%] bg-gradient-to-t from-[#0A0A0C] via-[#0A0A0C]/90 to-transparent"
+          className="absolute inset-x-0 bottom-0 h-[20%] bg-gradient-to-t from-[#0A0A0C] from-10% via-[#0A0A0C]/75 to-transparent"
           aria-hidden="true"
         />
       </motion.div>
