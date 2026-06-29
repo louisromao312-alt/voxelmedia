@@ -28,7 +28,7 @@ export default function AgencyBridge() {
       className="relative overflow-visible px-4 py-24 md:py-32 bg-[#0A0A0C]"
       aria-labelledby="agency-bridge-heading"
     >
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-5xl mx-auto overflow-visible">
         <div className="text-center mb-16">
           <div className="flex flex-col items-center gap-3 mb-3">
             <RoleBadge />
@@ -57,11 +57,13 @@ export default function AgencyBridge() {
           ref={bridgeRef}
           className="relative grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-8 md:gap-6 items-center overflow-visible"
         >
+          <BrandSprite inView={bridgeInView} />
+          <CreatorSprite inView={bridgeInView} />
+
           {/* Brand */}
-          <div className="relative overflow-visible">
-            <BrandSprite inView={bridgeInView} />
+          <div className="relative z-10 overflow-visible">
             <motion.div
-            className={`relative z-10 flex flex-col items-center md:items-end text-center md:text-right gap-4 p-8 rounded-2xl border bg-white/[0.02] transition-all duration-500 cursor-pointer select-none ${
+            className={`relative flex flex-col items-center md:items-end text-center md:text-right gap-4 p-8 rounded-2xl border bg-white/[0.02] transition-all duration-500 cursor-pointer select-none ${
               brandEmphasis
                 ? 'border-blue-400/30 bg-blue-400/5 scale-[1.02] shadow-[0_0_40px_rgba(96,165,250,0.08)]'
                 : creatorEmphasis
@@ -87,131 +89,14 @@ export default function AgencyBridge() {
           </motion.div>
           </div>
 
-          {/* Animated bridge */}
-          <div className="relative flex flex-col items-center justify-center overflow-visible py-4 md:py-0 min-h-[120px] md:min-w-[200px]">
+          {/* Center — star + label */}
+          <div className="relative z-10 flex flex-col items-center justify-center gap-4 py-4 md:py-0 min-h-[100px] md:min-w-[160px]">
             <StarSprite inView={bridgeInView} />
-            <svg
-              viewBox="0 0 200 80"
-              className="w-full max-w-[200px] h-20 hidden md:block"
-              aria-hidden="true"
-            >
-              <defs>
-                <linearGradient
-                  id="bridgeGradientH"
-                  gradientUnits="userSpaceOnUse"
-                  x1="0"
-                  y1="40"
-                  x2="200"
-                  y2="40"
-                >
-                  <stop offset="0%" stopColor="#60a5fa" />
-                  <stop offset="100%" stopColor="#4ade80" />
-                </linearGradient>
-                <filter id="bridgeGlowH" x="-20%" y="-20%" width="140%" height="140%">
-                  <feGaussianBlur stdDeviation="2.5" result="blur" />
-                  <feMerge>
-                    <feMergeNode in="blur" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
-              </defs>
-
-              <motion.path
-                d="M 0 40 Q 50 10, 100 40 T 200 40"
-                fill="none"
-                stroke="rgba(255,255,255,0.08)"
-                strokeWidth="1"
-                strokeDasharray="4 6"
-                initial={{ pathLength: 0, opacity: 0 }}
-                animate={
-                  bridgeInView
-                    ? { pathLength: 1, opacity: 1 }
-                    : { pathLength: 0, opacity: 0 }
-                }
-                transition={revealTransition(bridgeInView, 0.15, { duration: 1.4 })}
-              />
-
-              <motion.path
-                d="M 0 40 Q 50 10, 100 40 T 200 40"
-                fill="none"
-                stroke="url(#bridgeGradientH)"
-                strokeWidth="2"
-                strokeLinecap="round"
-                filter="url(#bridgeGlowH)"
-                initial={{ pathLength: 0, opacity: 0 }}
-                animate={
-                  bridgeInView
-                    ? { pathLength: 1, opacity: 1 }
-                    : { pathLength: 0, opacity: 0 }
-                }
-                transition={revealTransition(bridgeInView, 0.25, { duration: 1.5 })}
-              />
-            </svg>
-
-            {/* Mobile vertical bridge */}
-            <svg
-              viewBox="0 0 40 120"
-              className="w-10 h-28 md:hidden"
-              aria-hidden="true"
-            >
-              <defs>
-                <linearGradient
-                  id="bridgeGradientV"
-                  gradientUnits="userSpaceOnUse"
-                  x1="20"
-                  y1="0"
-                  x2="20"
-                  y2="120"
-                >
-                  <stop offset="0%" stopColor="#60a5fa" />
-                  <stop offset="100%" stopColor="#4ade80" />
-                </linearGradient>
-                <filter id="bridgeGlowV" x="-20%" y="-20%" width="140%" height="140%">
-                  <feGaussianBlur stdDeviation="2.5" result="blur" />
-                  <feMerge>
-                    <feMergeNode in="blur" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
-              </defs>
-
-              <motion.path
-                d="M 20 0 Q 35 40, 20 60 T 20 120"
-                fill="none"
-                stroke="rgba(255,255,255,0.08)"
-                strokeWidth="1"
-                strokeDasharray="4 6"
-                initial={{ pathLength: 0, opacity: 0 }}
-                animate={
-                  bridgeInView
-                    ? { pathLength: 1, opacity: 1 }
-                    : { pathLength: 0, opacity: 0 }
-                }
-                transition={revealTransition(bridgeInView, 0.15, { duration: 1.4 })}
-              />
-
-              <motion.path
-                d="M 20 0 Q 35 40, 20 60 T 20 120"
-                fill="none"
-                stroke="url(#bridgeGradientV)"
-                strokeWidth="2"
-                strokeLinecap="round"
-                filter="url(#bridgeGlowV)"
-                initial={{ pathLength: 0, opacity: 0 }}
-                animate={
-                  bridgeInView
-                    ? { pathLength: 1, opacity: 1 }
-                    : { pathLength: 0, opacity: 0 }
-                }
-                transition={revealTransition(bridgeInView, 0.25, { duration: 1.5 })}
-              />
-            </svg>
-
             <motion.p
-              className="mt-3 font-mono text-[10px] text-green-400 uppercase tracking-widest text-center whitespace-nowrap"
+              className="font-mono text-[10px] text-green-400 uppercase tracking-widest text-center whitespace-nowrap"
               initial={{ opacity: 0, y: 6 }}
               animate={bridgeInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 6 }}
-              transition={revealTransition(bridgeInView, 1.1, { duration: 0.5 })}
+              transition={revealTransition(bridgeInView, 0.8, { duration: 0.5 })}
             >
               Voxel Compliant
               <br className="md:hidden" />
@@ -221,10 +106,9 @@ export default function AgencyBridge() {
           </div>
 
           {/* Creator */}
-          <div className="relative overflow-visible">
-          <CreatorSprite inView={bridgeInView} />
+          <div className="relative z-10 overflow-visible">
           <motion.div
-            className={`relative z-10 flex flex-col items-center md:items-start text-center md:text-left gap-4 p-8 rounded-2xl border bg-white/[0.02] transition-all duration-500 cursor-pointer select-none ${
+            className={`relative flex flex-col items-center md:items-start text-center md:text-left gap-4 p-8 rounded-2xl border bg-white/[0.02] transition-all duration-500 cursor-pointer select-none ${
               creatorEmphasis
                 ? 'border-green-400/30 bg-green-400/5 scale-[1.02] shadow-[0_0_40px_rgba(74,222,128,0.08)]'
                 : brandEmphasis

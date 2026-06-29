@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion'
 import SectionReveal from '@/components/SectionReveal'
+import IndustryGapVillagers from '@/components/IndustryGapVillagers'
 import { RoleBadge } from '@/components/JourneySelector'
 import { useUserJourney } from '@/context/UserJourneyContext'
 import { EASE } from '@/components/SectionReveal'
@@ -20,7 +21,7 @@ export default function IndustryGap() {
 
   return (
     <SectionReveal
-      className="relative px-4 py-28 md:py-36 bg-[#0A0A0C]"
+      className="relative overflow-visible px-4 py-28 md:py-36 bg-[#0A0A0C]"
       aria-labelledby="industry-gap-heading"
     >
       <div
@@ -28,7 +29,7 @@ export default function IndustryGap() {
         aria-hidden="true"
         style={{
           background:
-            'linear-gradient(180deg, #0A0A0C 0%, #121214 45%, #161618 50%, #121214 55%, #0A0A0C 100%)',
+            'linear-gradient(180deg, #0A0A0C 0%, #0A100E 45%, #0C1210 50%, #0A100E 55%, #0A0A0C 100%)',
         }}
       />
 
@@ -36,19 +37,34 @@ export default function IndustryGap() {
         className="pointer-events-none absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
         aria-hidden="true"
         style={{
-          width: 'min(900px, 90vw)',
-          height: 'min(700px, 70vh)',
+          width: 'min(1100px, 110vw)',
+          height: 'min(900px, 85vh)',
           background:
-            'radial-gradient(ellipse at center, rgba(74,222,128,0.09) 0%, rgba(74,222,128,0.04) 38%, transparent 68%)',
-          filter: 'blur(48px)',
+            'radial-gradient(ellipse at center, rgba(74,222,128,0.2) 0%, rgba(74,222,128,0.1) 30%, rgba(74,222,128,0.04) 55%, transparent 72%)',
+          filter: 'blur(56px)',
         }}
       />
 
+      <div
+        className="pointer-events-none absolute left-1/2 top-[45%] z-0 -translate-x-1/2 -translate-y-1/2"
+        aria-hidden="true"
+        style={{
+          width: 'min(600px, 70vw)',
+          height: 'min(500px, 50vh)',
+          background:
+            'radial-gradient(circle at center, rgba(74,222,128,0.14) 0%, transparent 65%)',
+          filter: 'blur(32px)',
+        }}
+      />
+
+      <IndustryGapVillagers />
+
+      <div className="relative z-10 mx-auto max-w-5xl">
       <div className="relative z-10 max-w-3xl mx-auto text-center">
         <div className="flex justify-center mb-4">
           <RoleBadge />
         </div>
-        <p className="text-xs font-mono text-zinc-500 uppercase tracking-widest mb-4">
+        <p className="text-xs font-mono text-green-400/70 uppercase tracking-widest mb-4">
           The Industry Gap
         </p>
         <h2
@@ -56,18 +72,18 @@ export default function IndustryGap() {
           className="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight mb-6"
         >
           The Minecraft creator economy runs on intuition.
-          <span className="block text-zinc-500 mt-2">Not intelligence.</span>
+          <span className="block text-green-400/75 mt-2">Not intelligence.</span>
         </h2>
         <p
           id="industry-gap-body"
-          className="text-zinc-400 text-base sm:text-lg leading-relaxed max-w-2xl mx-auto"
+          className="text-zinc-300/90 text-base sm:text-lg leading-relaxed max-w-2xl mx-auto"
         >
           Studios chase trends blind. Brands sponsor creators without verified
           audience data. The Minecraft meta shifts overnight — and nobody has a
           single source of truth for what&apos;s actually moving across the{' '}
-          <span className="text-zinc-300">Minecraft ecosystem</span>. The gap
+          <span className="text-green-300/80">Minecraft ecosystem</span>. The gap
           isn&apos;t creativity. It&apos;s{' '}
-          <span className="text-white font-medium">data transparency</span>.
+          <span className="text-green-400 font-medium">data transparency</span>.
         </p>
 
         <AnimatePresence>
@@ -88,6 +104,7 @@ export default function IndustryGap() {
             </motion.p>
           )}
         </AnimatePresence>
+      </div>
       </div>
     </SectionReveal>
   )

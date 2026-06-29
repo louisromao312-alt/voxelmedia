@@ -10,6 +10,8 @@ const FLOAT = {
   ease: 'easeInOut' as const,
 }
 
+const SPRITE_IMG = 'h-auto w-full mix-blend-screen'
+
 function LevitateSprite({
   src,
   width,
@@ -19,7 +21,7 @@ function LevitateSprite({
   enter,
   floatDelay = 0,
   floatY = 10,
-  imageClassName = 'h-auto w-full drop-shadow-[0_8px_24px_rgba(0,0,0,0.45)]',
+  imageClassName = SPRITE_IMG,
 }: {
   src: string
   width: number
@@ -35,7 +37,7 @@ function LevitateSprite({
 
   return (
     <motion.div
-      className={`pointer-events-none absolute ${className ?? ''}`}
+      className={`pointer-events-none ${className ?? ''}`}
       initial={{
         opacity: 0,
         x: enter.x ?? 0,
@@ -75,13 +77,13 @@ export function BrandSprite({ inView }: { inView: boolean }) {
   return (
     <LevitateSprite
       src="/agency-bridge/brand.png"
-      width={200}
-      height={280}
-      className="z-0 -bottom-8 -left-6 w-[130px] sm:w-[155px] md:-left-12 md:-bottom-6 md:w-[185px] lg:w-[210px]"
+      width={320}
+      height={420}
+      className="absolute z-0 top-1/2 -translate-y-1/2 -left-4 w-[200px] sm:w-[240px] md:-left-24 md:w-[280px] lg:-left-32 lg:w-[320px]"
       inView={inView}
-      enter={{ x: -52, y: 28 }}
+      enter={{ x: -64, y: 32 }}
       floatDelay={0.15}
-      floatY={11}
+      floatY={12}
     />
   )
 }
@@ -90,14 +92,14 @@ export function StarSprite({ inView }: { inView: boolean }) {
   return (
     <LevitateSprite
       src="/agency-bridge/star.png"
-      width={96}
-      height={96}
-      className="z-10 -top-10 left-1/2 w-14 -translate-x-1/2 sm:w-16 md:-top-12 md:w-[72px]"
+      width={160}
+      height={160}
+      className="relative z-10 w-24 sm:w-28 md:w-32 lg:w-36"
       inView={inView}
       enter={{ y: -20, scale: 0.7 }}
       floatDelay={0.5}
-      floatY={8}
-      imageClassName="h-auto w-full drop-shadow-[0_0_20px_rgba(250,204,21,0.4)]"
+      floatY={9}
+      imageClassName={`${SPRITE_IMG} drop-shadow-[0_0_24px_rgba(250,204,21,0.35)]`}
     />
   )
 }
@@ -106,13 +108,13 @@ export function CreatorSprite({ inView }: { inView: boolean }) {
   return (
     <LevitateSprite
       src="/agency-bridge/creator.png"
-      width={200}
-      height={280}
-      className="z-0 -bottom-8 -right-6 w-[130px] sm:w-[155px] md:-right-12 md:-bottom-6 md:w-[185px] lg:w-[210px]"
+      width={320}
+      height={420}
+      className="absolute z-0 top-1/2 -translate-y-1/2 -right-4 w-[200px] sm:w-[240px] md:-right-24 md:w-[280px] lg:-right-32 lg:w-[320px]"
       inView={inView}
-      enter={{ x: 52, y: 28 }}
+      enter={{ x: 64, y: 32 }}
       floatDelay={0.25}
-      floatY={11}
+      floatY={12}
     />
   )
 }
