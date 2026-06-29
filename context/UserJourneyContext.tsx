@@ -36,7 +36,7 @@ export function useUserJourney() {
 
 export const HERO_COPY = {
   default: {
-    headline: 'Stop guessing.\nStart building hits.',
+    headline: 'The industry record for the UGC game economy.',
     sub: 'The data engine for the Minecraft creator economy. Uncover the mechanics behind viral modpacks, server trends, and content formats. Choose your path below.',
   },
   creator: {
