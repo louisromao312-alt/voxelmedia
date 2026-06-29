@@ -36,15 +36,15 @@ export function useUserJourney() {
 
 export const HERO_COPY = {
   default: {
-    headline: 'The industry record for the UGC game economy.',
+    headline: 'THE INDUSTRY RECORD FOR\nTHE UGC GAME ECONOMY.',
     sub: 'The data engine for the Minecraft creator economy. Uncover the mechanics behind viral modpacks, server trends, and content formats. Choose your path below.',
   },
   creator: {
-    headline: 'Scale your craft\nwith data.',
+    headline: 'SCALE YOUR CRAFT\nWITH DATA.',
     sub: 'Real-time trend analysis and performance insights for Minecraft creators.',
   },
   brand: {
-    headline: 'Market entry,\nmade compliant.',
+    headline: 'MARKET ENTRY,\nMADE COMPLIANT.',
     sub: 'Bridge the gap between your brand and 182M+ monthly active players with EULA-compliant strategies.',
   },
 } as const

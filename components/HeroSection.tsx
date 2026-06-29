@@ -79,7 +79,7 @@ function ScrambleHeadline({
   return (
     <h1
       id="hero-heading"
-      className="max-w-3xl whitespace-pre-line font-mono text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl md:text-5xl lg:text-6xl min-h-[1.2em]"
+      className="w-full max-w-none whitespace-pre-line font-mono text-[clamp(1.65rem,4.5vw,4.25rem)] font-bold uppercase leading-[1.05] tracking-[0.04em] text-white min-h-[2.4em] sm:min-h-[2.5em]"
       aria-label={text.replace('\n', ' ')}
     >
       {lines.map((line, li) => (
@@ -127,7 +127,7 @@ export default function HeroSection() {
           fetchPriority="high"
           decoding="async"
           draggable={false}
-          className="absolute inset-0 h-full w-full object-cover object-center [image-rendering:auto]"
+          className="absolute inset-0 h-full w-full object-cover object-center brightness-[1.06] contrast-[1.04] [image-rendering:auto]"
         />
       </div>
 
@@ -136,7 +136,7 @@ export default function HeroSection() {
         aria-hidden="true"
         style={{
           background:
-            'radial-gradient(ellipse 70% 60% at 50% 48%, rgba(10,10,12,0.55) 0%, rgba(10,10,12,0.88) 100%)',
+            'radial-gradient(ellipse 80% 70% at 50% 48%, rgba(10,10,12,0.28) 0%, rgba(10,10,12,0.58) 100%)',
         }}
       />
 
@@ -145,36 +145,36 @@ export default function HeroSection() {
         aria-hidden="true"
         style={{
           background:
-            'linear-gradient(to top, rgba(10,10,12,0.9) 0%, transparent 30%, transparent 70%, rgba(10,10,12,0.4) 100%)',
+            'linear-gradient(to top, rgba(10,10,12,0.62) 0%, transparent 32%, transparent 78%, rgba(10,10,12,0.22) 100%)',
         }}
       />
 
-      <div className="relative z-10 flex min-h-[92vh] flex-col items-center justify-center px-4 text-center sm:px-6">
-        <div className="mx-auto flex w-full max-w-4xl flex-col items-center gap-6">
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.15, duration: 0.6, ease: EASE }}
-            className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/35 px-3 py-1 text-xs font-mono text-zinc-300 backdrop-blur-sm"
-          >
-            <span
-              className="h-1.5 w-1.5 animate-pulse rounded-full bg-green-400"
-              aria-hidden="true"
-            />
-            PRIVATE BETA · LIMITED ACCESS
-          </motion.div>
+      <div className="relative z-10 flex min-h-[92vh] w-full flex-col items-center justify-center px-4 text-center sm:px-6">
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15, duration: 0.6, ease: EASE }}
+          className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/35 px-3 py-1 text-xs font-mono text-zinc-300 backdrop-blur-sm"
+        >
+          <span
+            className="h-1.5 w-1.5 animate-pulse rounded-full bg-green-400"
+            aria-hidden="true"
+          />
+          PRIVATE BETA · LIMITED ACCESS
+        </motion.div>
 
-          <div className="flex w-full flex-col items-center gap-5">
-            <ScrambleHeadline
-              key={contentKey}
-              text={copy.headline}
-              startDelay={startDelay}
-            />
+        <div className="mt-6 w-full max-w-none">
+          <ScrambleHeadline
+            key={contentKey}
+            text={copy.headline}
+            startDelay={startDelay}
+          />
+        </div>
 
-            <p className="mx-auto max-w-2xl text-base leading-relaxed text-zinc-200/90 sm:text-lg">
-              {copy.sub}
-            </p>
-          </div>
+        <div className="mx-auto mt-6 flex w-full max-w-4xl flex-col items-center gap-6">
+          <p className="mx-auto max-w-2xl text-base leading-relaxed text-zinc-200/90 sm:text-lg">
+            {copy.sub}
+          </p>
 
           <motion.div
             initial={{ opacity: 0, y: 16 }}
