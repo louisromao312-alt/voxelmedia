@@ -5,6 +5,7 @@ import { motion, useInView } from 'framer-motion'
 import { Shield, Zap, Users } from 'lucide-react'
 import SectionReveal, { EASE, revealTransition } from '@/components/SectionReveal'
 import TerminalMetricsStrip from '@/components/TerminalMetricsStrip'
+import TerminalVillager from '@/components/TerminalVillager'
 import { RoleBadge } from '@/components/JourneySelector'
 import { useUserJourney } from '@/context/UserJourneyContext'
 
@@ -64,16 +65,17 @@ export default function VoxelIntelligence() {
       aria-labelledby="voxel-terminal-heading"
     >
       <div className="relative z-10 max-w-6xl mx-auto">
-        <div className="text-center mb-12">
-          <div className="flex justify-center mb-3">
+        <div className="relative mb-12 text-center">
+          <TerminalVillager />
+          <div className="relative z-10 flex justify-center mb-3">
             <RoleBadge />
           </div>
-          <p className="text-xs font-mono text-zinc-500 uppercase tracking-widest mb-3">
+          <p className="relative z-10 text-xs font-mono text-zinc-500 uppercase tracking-widest mb-3">
             Voxel Intelligence
           </p>
           <h2
             id="voxel-terminal-heading"
-            className="text-3xl sm:text-4xl font-bold text-white"
+            className="relative z-10 text-3xl sm:text-4xl font-bold text-white"
           >
             The Terminal
           </h2>
