@@ -4,6 +4,7 @@ import { useRef, type PointerEvent } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { Building2, Users, Shield } from 'lucide-react'
 import SectionReveal, { revealTransition } from '@/components/SectionReveal'
+import { BrandSprite, CreatorSprite, StarSprite } from '@/components/AgencyBridgeSprites'
 import { RoleBadge } from '@/components/JourneySelector'
 import { useUserJourney } from '@/context/UserJourneyContext'
 
@@ -24,7 +25,7 @@ export default function AgencyBridge() {
 
   return (
     <SectionReveal
-      className="relative px-4 py-24 md:py-32 bg-[#0A0A0C]"
+      className="relative overflow-visible px-4 py-24 md:py-32 bg-[#0A0A0C]"
       aria-labelledby="agency-bridge-heading"
     >
       <div className="max-w-5xl mx-auto">
@@ -54,11 +55,13 @@ export default function AgencyBridge() {
 
         <div
           ref={bridgeRef}
-          className="relative grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-8 md:gap-6 items-center"
+          className="relative grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-8 md:gap-6 items-center overflow-visible"
         >
           {/* Brand */}
-          <motion.div
-            className={`flex flex-col items-center md:items-end text-center md:text-right gap-4 p-8 rounded-2xl border bg-white/[0.02] transition-all duration-500 cursor-pointer select-none ${
+          <div className="relative overflow-visible">
+            <BrandSprite inView={bridgeInView} />
+            <motion.div
+            className={`relative z-10 flex flex-col items-center md:items-end text-center md:text-right gap-4 p-8 rounded-2xl border bg-white/[0.02] transition-all duration-500 cursor-pointer select-none ${
               brandEmphasis
                 ? 'border-blue-400/30 bg-blue-400/5 scale-[1.02] shadow-[0_0_40px_rgba(96,165,250,0.08)]'
                 : creatorEmphasis
@@ -82,9 +85,11 @@ export default function AgencyBridge() {
               </p>
             </div>
           </motion.div>
+          </div>
 
           {/* Animated bridge */}
-          <div className="relative flex flex-col items-center justify-center py-4 md:py-0 min-h-[120px] md:min-w-[200px]">
+          <div className="relative flex flex-col items-center justify-center overflow-visible py-4 md:py-0 min-h-[120px] md:min-w-[200px]">
+            <StarSprite inView={bridgeInView} />
             <svg
               viewBox="0 0 200 80"
               className="w-full max-w-[200px] h-20 hidden md:block"
@@ -216,8 +221,10 @@ export default function AgencyBridge() {
           </div>
 
           {/* Creator */}
+          <div className="relative overflow-visible">
+          <CreatorSprite inView={bridgeInView} />
           <motion.div
-            className={`flex flex-col items-center md:items-start text-center md:text-left gap-4 p-8 rounded-2xl border bg-white/[0.02] transition-all duration-500 cursor-pointer select-none ${
+            className={`relative z-10 flex flex-col items-center md:items-start text-center md:text-left gap-4 p-8 rounded-2xl border bg-white/[0.02] transition-all duration-500 cursor-pointer select-none ${
               creatorEmphasis
                 ? 'border-green-400/30 bg-green-400/5 scale-[1.02] shadow-[0_0_40px_rgba(74,222,128,0.08)]'
                 : brandEmphasis
@@ -241,6 +248,7 @@ export default function AgencyBridge() {
               </p>
             </div>
           </motion.div>
+          </div>
         </div>
       </div>
     </SectionReveal>

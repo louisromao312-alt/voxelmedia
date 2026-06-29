@@ -2,7 +2,6 @@
 
 import { motion, AnimatePresence } from 'framer-motion'
 import SectionReveal from '@/components/SectionReveal'
-import VoxelBrain from '@/components/VoxelBrain'
 import { RoleBadge } from '@/components/JourneySelector'
 import { useUserJourney } from '@/context/UserJourneyContext'
 import { EASE } from '@/components/SectionReveal'
@@ -21,7 +20,7 @@ export default function IndustryGap() {
 
   return (
     <SectionReveal
-      className="relative px-4 py-28 md:py-36 bg-[#0A0A0C] overflow-visible z-[1]"
+      className="relative px-4 py-28 md:py-36 bg-[#0A0A0C]"
       aria-labelledby="industry-gap-heading"
     >
       <div
@@ -33,7 +32,17 @@ export default function IndustryGap() {
         }}
       />
 
-      <VoxelBrain />
+      <div
+        className="pointer-events-none absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
+        aria-hidden="true"
+        style={{
+          width: 'min(900px, 90vw)',
+          height: 'min(700px, 70vh)',
+          background:
+            'radial-gradient(ellipse at center, rgba(74,222,128,0.09) 0%, rgba(74,222,128,0.04) 38%, transparent 68%)',
+          filter: 'blur(48px)',
+        }}
+      />
 
       <div className="relative z-10 max-w-3xl mx-auto text-center">
         <div className="flex justify-center mb-4">

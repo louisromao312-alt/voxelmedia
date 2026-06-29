@@ -65,28 +65,6 @@ body {
   animation-play-state: paused;
 }
 
-@keyframes voxel-brain-rotate {
-  from {
-    transform: rotateX(16deg) rotateY(0deg);
-  }
-  to {
-    transform: rotateX(16deg) rotateY(360deg);
-  }
-}
-
-.voxel-brain-rotate {
-  animation: voxel-brain-rotate 36s linear infinite;
-  transform-style: preserve-3d;
-  backface-visibility: hidden;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .voxel-brain-rotate {
-    animation: none;
-    transform: rotateX(16deg) rotateY(24deg);
-  }
-}
-
 /* Sparkline path clip reveal */
 .sparkline-path {
   stroke-dasharray: 1;
