@@ -79,7 +79,7 @@ function ScrambleHeadline({
   return (
     <h1
       id="hero-heading"
-      className="w-full max-w-none whitespace-pre-line font-mono text-[clamp(1.65rem,4.5vw,4.25rem)] font-bold uppercase leading-[1.05] tracking-[0.04em] text-white min-h-[2.4em] sm:min-h-[2.5em]"
+      className="w-full max-w-none whitespace-pre-line font-mono text-[clamp(1.75rem,5.5vw,4.75rem)] font-extrabold uppercase leading-[1.05] tracking-[0.03em] text-white [text-shadow:0_0.5px_0_currentColor,0_1px_0_rgba(0,0,0,0.35)] min-h-[2.4em] sm:min-h-[2.5em]"
       aria-label={text.replace('\n', ' ')}
     >
       {lines.map((line, li) => (
@@ -123,11 +123,13 @@ export default function HeroSection() {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/hero/background.jpg"
+          srcSet="/hero/background.jpg 2048w"
+          sizes="100vw"
           alt=""
           fetchPriority="high"
           decoding="async"
           draggable={false}
-          className="absolute inset-0 h-full w-full object-cover object-center brightness-[1.06] contrast-[1.04] [image-rendering:auto]"
+          className="absolute inset-0 h-full w-full object-cover object-center"
         />
       </div>
 
@@ -145,16 +147,38 @@ export default function HeroSection() {
         aria-hidden="true"
         style={{
           background:
-            'linear-gradient(to top, rgba(10,10,12,0.62) 0%, transparent 32%, transparent 78%, rgba(10,10,12,0.22) 100%)',
+            'linear-gradient(to top, rgba(10,10,12,0.62) 0%, transparent 32%, transparent 88%, rgba(10,10,12,0.18) 100%)',
         }}
       />
 
-      <div className="relative z-10 flex min-h-[92vh] w-full flex-col items-center justify-center px-4 text-center sm:px-6">
+      <div
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-[min(42vh,360px)]"
+        aria-hidden="true"
+      >
+        <div
+          className="absolute inset-0 backdrop-blur-[8px]"
+          style={{
+            WebkitMaskImage:
+              'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.35) 38%, black 100%)',
+            maskImage:
+              'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.35) 38%, black 100%)',
+          }}
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              'linear-gradient(to bottom, transparent 0%, rgba(10,10,12,0.45) 42%, rgba(10,10,12,0.88) 72%, #0A0A0C 100%)',
+          }}
+        />
+      </div>
+
+      <div className="relative z-10 flex min-h-[92vh] w-full flex-col items-center justify-center gap-5">
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15, duration: 0.6, ease: EASE }}
-          className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/35 px-3 py-1 text-xs font-mono text-zinc-300 backdrop-blur-sm"
+          className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/25 px-3 py-1 text-xs font-mono text-zinc-200"
         >
           <span
             className="h-1.5 w-1.5 animate-pulse rounded-full bg-green-400"
@@ -163,7 +187,7 @@ export default function HeroSection() {
           PRIVATE BETA · LIMITED ACCESS
         </motion.div>
 
-        <div className="mt-6 w-full max-w-none">
+        <div className="w-screen max-w-[100vw] px-4 text-center sm:px-6 lg:px-8">
           <ScrambleHeadline
             key={contentKey}
             text={copy.headline}
@@ -171,38 +195,45 @@ export default function HeroSection() {
           />
         </div>
 
-        <div className="mx-auto mt-6 flex w-full max-w-4xl flex-col items-center gap-6">
-          <p className="mx-auto max-w-2xl text-base leading-relaxed text-zinc-200/90 sm:text-lg">
-            {copy.sub}
-          </p>
+        <div className="relative mx-4 w-full max-w-6xl sm:mx-6">
+          <div
+            className="pointer-events-none absolute inset-0 rounded-2xl border border-white/[0.07] bg-[#0A0A0C]/42 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] backdrop-blur-[10px] sm:rounded-3xl"
+            aria-hidden="true"
+          />
 
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.45, duration: 0.6, ease: EASE }}
-            className="mt-1 flex flex-col items-center gap-4"
-          >
-            <JourneySelector />
+          <div className="relative z-10 flex flex-col items-center gap-6 px-5 py-8 sm:px-10 sm:py-10">
+            <p className="mx-auto max-w-2xl text-center text-base leading-relaxed text-zinc-100/95 sm:text-lg">
+              {copy.sub}
+            </p>
 
-            <AnimatePresence>
-              {role && (
-                <motion.button
-                  key="continue"
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -6 }}
-                  transition={{ duration: 0.4, ease: EASE }}
-                  onClick={scrollToWaitlist}
-                  className="cursor-pointer text-sm text-zinc-400 underline decoration-zinc-600 underline-offset-4 transition-colors hover:text-white hover:decoration-zinc-300"
-                  aria-label="Continue to waitlist signup"
-                >
-                  Continue to join Voxel →
-                </motion.button>
-              )}
-            </AnimatePresence>
-          </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.45, duration: 0.6, ease: EASE }}
+              className="flex flex-col items-center gap-4"
+            >
+              <JourneySelector />
 
-          <WaitlistSocialProof />
+              <AnimatePresence>
+                {role && (
+                  <motion.button
+                    key="continue"
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    transition={{ duration: 0.4, ease: EASE }}
+                    onClick={scrollToWaitlist}
+                    className="cursor-pointer text-sm text-zinc-300 underline decoration-zinc-600 underline-offset-4 transition-colors hover:text-white hover:decoration-zinc-300"
+                    aria-label="Continue to waitlist signup"
+                  >
+                    Continue to join Voxel →
+                  </motion.button>
+                )}
+              </AnimatePresence>
+            </motion.div>
+
+            <WaitlistSocialProof />
+          </div>
         </div>
       </div>
     </section>

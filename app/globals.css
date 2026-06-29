@@ -126,3 +126,48 @@ body {
 .spotlight-card:hover .spotlight-border {
   opacity: 1;
 }
+
+/* Join Voxel — 5s liquid fill on hover */
+.join-voxel-btn:hover .join-voxel-wave-1 {
+  animation: join-voxel-wave-1 2.2s ease-in-out infinite;
+}
+
+.join-voxel-btn:hover .join-voxel-wave-2 {
+  animation: join-voxel-wave-2 2.8s ease-in-out infinite;
+}
+
+.join-voxel-btn:hover .join-voxel-wave-3 {
+  animation: join-voxel-wave-3 3.4s ease-in-out infinite;
+}
+
+@keyframes join-voxel-wave-1 {
+  0%,
+  100% {
+    transform: translateX(-7%) scaleY(1);
+  }
+  50% {
+    transform: translateX(7%) scaleY(1.12);
+  }
+}
+
+@keyframes join-voxel-wave-2 {
+  0%,
+  100% {
+    transform: translateX(6%) scaleY(0.92);
+  }
+  50% {
+    transform: translateX(-8%) scaleY(1.08);
+  }
+}
+
+@keyframes join-voxel-wave-3 {
+  0%,
+  100% {
+    transform: translateX(-4%) translateY(0);
+    opacity: 0.35;
+  }
+  50% {
+    transform: translateX(5%) translateY(-2px);
+    opacity: 0.55;
+  }
+}

@@ -19,20 +19,22 @@ export default function Home() {
 
       <JourneyShell>
         <div className="relative bg-[#0A0A0C]" style={{ zIndex: 10 }}>
-          <header className="sticky top-0 z-50 flex items-center justify-between px-4 sm:px-6 py-5 max-w-7xl mx-auto w-full bg-[#0A0A0C]/80 backdrop-blur-md border-b border-white/[0.04]">
-            <div className="flex items-center gap-2.5" aria-label="Voxel wordmark">
-              <div
-                className="w-6 h-6 border border-white/40 rotate-45 sm:w-7 sm:h-7"
-                aria-hidden="true"
-                style={{ boxShadow: '0 0 10px rgba(255,255,255,0.2)' }}
-              />
-              <span className="font-mono text-base font-semibold tracking-widest text-white uppercase sm:text-lg">
-                Voxel
-              </span>
+          <header className="sticky top-0 z-50 w-full border-b border-white/[0.04] bg-[#0A0A0C]/80 backdrop-blur-md">
+            <div className="flex w-full items-center justify-between px-4 py-5 sm:px-6 lg:px-8">
+              <div className="flex items-center gap-2.5" aria-label="Voxel wordmark">
+                <div
+                  className="w-6 h-6 border border-white/40 rotate-45 sm:w-7 sm:h-7"
+                  aria-hidden="true"
+                  style={{ boxShadow: '0 0 10px rgba(255,255,255,0.2)' }}
+                />
+                <span className="font-mono text-base font-semibold tracking-widest text-white uppercase sm:text-lg">
+                  Voxel
+                </span>
+              </div>
+              <nav aria-label="Primary navigation">
+                <ScrollToWaitlist />
+              </nav>
             </div>
-            <nav aria-label="Primary navigation">
-              <ScrollToWaitlist />
-            </nav>
           </header>
 
           <main className="bg-[#0A0A0C]">
