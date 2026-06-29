@@ -88,7 +88,7 @@ function MetricCard({
           src="/architects-advantage/crown.png"
           alt=""
           draggable={false}
-          className="pointer-events-none absolute -left-3 -top-7 z-10 h-auto w-[4.5rem] translate-x-[13px] -translate-y-[20px] -rotate-[5deg] sm:-left-4 sm:-top-8 sm:w-[5.25rem]"
+          className="pointer-events-none absolute -left-3 -top-7 z-10 h-auto w-[4.5rem] translate-x-[11px] -translate-y-[20px] -rotate-[5deg] sm:-left-4 sm:-top-8 sm:w-[5.25rem]"
           aria-hidden="true"
         />
       )}

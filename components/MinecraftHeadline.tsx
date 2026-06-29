@@ -1,4 +1,5 @@
 import localFont from 'next/font/local'
+import type { ReactNode } from 'react'
 
 const minecraftTen = localFont({
   src: '../public/fonts/MinecraftTen.woff',
@@ -17,11 +18,21 @@ function MinecraftLine({ children }: { children: string }) {
   )
 }
 
+export function MinecraftBetaBadge({ children }: { children: ReactNode }) {
+  return (
+    <span className="minecraft-beta-block">
+      <span className="minecraft-beta-text">{children}</span>
+    </span>
+  )
+}
+
 export default function MinecraftHeadline({
   text,
+  middle,
   id = 'hero-heading',
 }: {
   text: string
+  middle?: ReactNode
   id?: string
 }) {
   const lines = text.split('\n')
@@ -32,9 +43,17 @@ export default function MinecraftHeadline({
       className={`${minecraftTen.className} minecraft-headline w-full text-center`}
       aria-label={text.replace('\n', ' ')}
     >
-      {lines.map((line) => (
-        <MinecraftLine key={line}>{line}</MinecraftLine>
-      ))}
+      {lines.length >= 2 && middle ? (
+        <>
+          <MinecraftLine>{lines[0]}</MinecraftLine>
+          <span className="minecraft-headline-middle block">{middle}</span>
+          {lines.slice(1).map((line) => (
+            <MinecraftLine key={line}>{line}</MinecraftLine>
+          ))}
+        </>
+      ) : (
+        lines.map((line) => <MinecraftLine key={line}>{line}</MinecraftLine>)
+      )}
     </h1>
   )
 }

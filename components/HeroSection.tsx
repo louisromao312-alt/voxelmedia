@@ -4,7 +4,9 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useUserJourney, HERO_COPY } from '@/context/UserJourneyContext'
 import JourneySelector from '@/components/JourneySelector'
 import WaitlistSocialProof from '@/components/WaitlistSocialProof'
-import MinecraftHeadline from '@/components/MinecraftHeadline'
+import MinecraftHeadline, {
+  MinecraftBetaBadge,
+} from '@/components/MinecraftHeadline'
 import { EASE } from '@/components/SectionReveal'
 
 function scrollToWaitlist() {
@@ -55,26 +57,20 @@ export default function HeroSection() {
       <div className="relative z-10 flex min-h-[92vh] flex-col items-center justify-center px-4 text-center sm:px-6">
         <div className="mx-auto flex w-full max-w-4xl flex-col items-center gap-6">
             <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.15, duration: 0.6, ease: EASE }}
-              className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/35 px-3 py-1 text-xs font-mono text-zinc-300 backdrop-blur-sm"
-            >
-              <span
-                className="h-1.5 w-1.5 animate-pulse rounded-full bg-green-400"
-                aria-hidden="true"
-              />
-              PRIVATE BETA · LIMITED ACCESS
-            </motion.div>
-
-            <motion.div
               key={contentKey}
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, ease: EASE }}
               className="flex w-full flex-col items-center gap-5"
             >
-              <MinecraftHeadline text={copy.headline} />
+              <MinecraftHeadline
+                text={copy.headline}
+                middle={
+                  <MinecraftBetaBadge>
+                    PRIVATE BETA · LIMITED ACCESS
+                  </MinecraftBetaBadge>
+                }
+              />
 
               <p className="mx-auto max-w-2xl text-base leading-relaxed text-zinc-200/90 sm:text-lg">
                 {copy.sub}
