@@ -31,11 +31,11 @@ export default function FreemiumInsights() {
       <div className="max-w-6xl mx-auto">
         <div
           ref={contentRef}
-          className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-14 items-center rounded-2xl border border-white/[0.08] bg-white/[0.02] p-8 sm:p-10 overflow-hidden"
+          className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-14 items-center rounded-2xl border border-white/[0.08] bg-white/[0.02] p-8 sm:p-10 overflow-visible"
         >
           {/* Left — report preview mockup */}
           <motion.div
-            className="relative"
+            className="relative overflow-visible"
             initial={{ opacity: 0, x: -20 }}
             animate={
               contentInView
