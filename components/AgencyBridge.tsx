@@ -63,7 +63,7 @@ export default function AgencyBridge() {
           {/* Brand */}
           <div className="relative z-10 overflow-visible">
             <motion.div
-            className={`relative flex flex-col items-center md:items-end text-center md:text-right gap-4 p-8 rounded-2xl border bg-white/[0.02] transition-all duration-500 cursor-pointer select-none ${
+            className={`relative z-10 flex flex-col items-center md:items-end text-center md:text-right gap-4 p-8 rounded-2xl border bg-white/[0.02] transition-all duration-500 cursor-pointer select-none ${
               brandEmphasis
                 ? 'border-blue-400/30 bg-blue-400/5 scale-[1.02] shadow-[0_0_40px_rgba(96,165,250,0.08)]'
                 : creatorEmphasis
