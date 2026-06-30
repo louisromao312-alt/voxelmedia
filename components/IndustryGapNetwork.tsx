@@ -18,10 +18,11 @@ function dist(a: { x: number; y: number }, b: { x: number; y: number }) {
 /** Organic clusters — loose, asymmetric placement */
 const NODES: { x: number; y: number }[] = (() => {
   const anchors = [
-    { cx: 155, cy: 145, spread: 72, count: 6 },
-    { cx: 300, cy: 118, spread: 64, count: 5 },
-    { cx: 248, cy: 248, spread: 78, count: 5 },
-    { cx: 92, cy: 248, spread: 58, count: 4 },
+    { cx: 155, cy: 145, spread: 72, count: 7 },
+    { cx: 300, cy: 118, spread: 64, count: 6 },
+    { cx: 248, cy: 248, spread: 78, count: 6 },
+    { cx: 92, cy: 248, spread: 58, count: 5 },
+    { cx: 388, cy: 210, spread: 52, count: 5 },
   ]
 
   const nodes: { x: number; y: number }[] = []
@@ -42,8 +43,8 @@ const NODES: { x: number; y: number }[] = (() => {
   return nodes
 })()
 
-const MAX_EDGE_DIST = 118
-const NEIGHBORS_PER_NODE = 2
+const MAX_EDGE_DIST = 126
+const NEIGHBORS_PER_NODE = 3
 
 function buildEdges(nodes: { x: number; y: number }[]) {
   const edges: [number, number][] = []
@@ -70,10 +71,24 @@ function buildEdges(nodes: { x: number; y: number }[]) {
     }
   }
 
+  // A few soft bridges between clusters
+  for (let i = 0; i < nodes.length; i += 9) {
+    let best = -1
+    let bestD = 0
+    for (let j = i + 1; j < nodes.length; j++) {
+      const d = dist(nodes[i], nodes[j])
+      if (d > 95 && d < 175 && d > bestD) {
+        bestD = d
+        best = j
+      }
+    }
+    if (best >= 0) addEdge(i, best)
+  }
+
   return edges
 }
 
-const PULSE_INDICES = new Set([2, 8, 14, 17])
+const PULSE_INDICES = new Set([2, 8, 14, 17, 22, 27])
 
 export default function IndustryGapNetwork() {
   const edges = useMemo(() => buildEdges(NODES), [])
@@ -86,8 +101,8 @@ export default function IndustryGapNetwork() {
       <div
         className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
         style={{
-          width: 'min(900px, 110vw)',
-          height: 'min(520px, 75vh)',
+          width: 'min(1170px, 120vw)',
+          height: 'min(676px, 85vh)',
           background:
             'radial-gradient(ellipse at center, rgba(251,191,36,0.16) 0%, rgba(245,158,11,0.08) 38%, rgba(234,179,8,0.03) 58%, transparent 74%)',
           filter: 'blur(56px)',
@@ -96,7 +111,7 @@ export default function IndustryGapNetwork() {
 
       <motion.svg
         viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}
-        className="relative h-auto w-[min(680px,95vw)] opacity-[0.88]"
+        className="relative h-auto w-[min(884px,98vw)] opacity-[0.88]"
         initial={{ opacity: 0, scale: 0.97 }}
         whileInView={{ opacity: 0.88, scale: 1 }}
         viewport={{ once: true, amount: 0.3 }}

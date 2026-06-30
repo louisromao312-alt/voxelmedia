@@ -78,7 +78,7 @@ export default function WaitlistForm({ id }: { id?: string }) {
             src="/voxel-brief/bird.png"
             alt=""
             draggable={false}
-            className="pointer-events-none absolute -right-1 -top-10 z-30 h-auto w-[6.825rem] translate-x-[13px] -translate-y-[48px] sm:-right-2 sm:-top-11 sm:w-[7.8rem] sm:translate-x-[15px] sm:-translate-y-[48px]"
+            className="pointer-events-none absolute -right-1 -top-10 z-30 h-auto w-[6.825rem] translate-x-[3px] -translate-y-[48px] sm:-right-2 sm:-top-11 sm:w-[7.8rem] sm:translate-x-[5px] sm:-translate-y-[48px]"
             aria-hidden="true"
           />
           <LayoutGroup>
