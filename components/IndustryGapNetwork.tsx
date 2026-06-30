@@ -6,35 +6,44 @@ import { motion } from 'framer-motion'
 const VIEW_W = 520
 const VIEW_H = 360
 
-/** Evenly scattered nodes — wide field, no silhouette */
-const NODES: { x: number; y: number }[] = (() => {
-  const cols = 9
-  const rows = 6
-  const padX = 36
-  const padY = 32
-  const nodes: { x: number; y: number }[] = []
+function seeded(i: number, salt = 0) {
+  const x = Math.sin(i * 127.1 + salt * 311.7) * 43758.5453
+  return x - Math.floor(x)
+}
 
-  for (let r = 0; r < rows; r++) {
-    for (let c = 0; c < cols; c++) {
-      const jitterX = (((c * 17 + r * 11) % 23) - 11) * 0.9
-      const jitterY = (((c * 13 + r * 19) % 21) - 10) * 0.85
-      const stagger = r % 2 === 0 ? 0 : (VIEW_W - padX * 2) / (cols - 1) / 2
+function dist(a: { x: number; y: number }, b: { x: number; y: number }) {
+  return Math.hypot(a.x - b.x, a.y - b.y)
+}
+
+/** Organic clusters — loose, asymmetric placement */
+const NODES: { x: number; y: number }[] = (() => {
+  const anchors = [
+    { cx: 155, cy: 145, spread: 72, count: 6 },
+    { cx: 300, cy: 118, spread: 64, count: 5 },
+    { cx: 248, cy: 248, spread: 78, count: 5 },
+    { cx: 92, cy: 248, spread: 58, count: 4 },
+  ]
+
+  const nodes: { x: number; y: number }[] = []
+  let seed = 0
+
+  for (const { cx, cy, spread, count } of anchors) {
+    for (let n = 0; n < count; n++) {
+      const angle = seeded(seed, 1) * Math.PI * 2
+      const radius = (0.25 + seeded(seed, 2) * 0.75) * spread
       nodes.push({
-        x: padX + stagger + (c / (cols - 1)) * (VIEW_W - padX * 2) + jitterX,
-        y: padY + (r / (rows - 1)) * (VIEW_H - padY * 2) + jitterY,
+        x: cx + Math.cos(angle) * radius,
+        y: cy + Math.sin(angle) * radius * 0.82,
       })
+      seed++
     }
   }
 
   return nodes
 })()
 
-const MAX_EDGE_DIST = 148
-const NEIGHBORS_PER_NODE = 5
-
-function dist(a: { x: number; y: number }, b: { x: number; y: number }) {
-  return Math.hypot(a.x - b.x, a.y - b.y)
-}
+const MAX_EDGE_DIST = 118
+const NEIGHBORS_PER_NODE = 2
 
 function buildEdges(nodes: { x: number; y: number }[]) {
   const edges: [number, number][] = []
@@ -61,27 +70,10 @@ function buildEdges(nodes: { x: number; y: number }[]) {
     }
   }
 
-  // Sparse long-range links across the mesh
-  for (let i = 0; i < nodes.length; i += 7) {
-    let best = -1
-    let bestD = 0
-    for (let j = 0; j < nodes.length; j++) {
-      if (i === j) continue
-      const d = dist(nodes[i], nodes[j])
-      if (d > 120 && d < 220 && d > bestD) {
-        bestD = d
-        best = j
-      }
-    }
-    if (best >= 0) addEdge(i, best)
-  }
-
   return edges
 }
 
-const PULSE_INDICES = new Set(
-  [3, 12, 21, 30, 39, 48, 8, 17, 26, 35, 44].filter((i) => i < NODES.length),
-)
+const PULSE_INDICES = new Set([2, 8, 14, 17])
 
 export default function IndustryGapNetwork() {
   const edges = useMemo(() => buildEdges(NODES), [])
@@ -138,7 +130,7 @@ export default function IndustryGapNetwork() {
           </linearGradient>
         </defs>
 
-        <g filter="url(#ig-line-glow)" opacity="0.62">
+        <g filter="url(#ig-line-glow)" opacity="0.58">
           {edges.map(([a, b], i) => (
             <motion.line
               key={`${a}-${b}`}
@@ -153,7 +145,7 @@ export default function IndustryGapNetwork() {
               viewport={{ once: true }}
               transition={{
                 duration: 0.7,
-                delay: 0.01 * (i % 30),
+                delay: 0.02 * (i % 16),
                 ease: [0.16, 1, 0.3, 1],
               }}
             />
@@ -186,7 +178,7 @@ export default function IndustryGapNetwork() {
                   },
                   default: {
                     duration: 0.45,
-                    delay: 0.01 * i,
+                    delay: 0.02 * i,
                     ease: [0.16, 1, 0.3, 1],
                   },
                 }}
@@ -203,7 +195,7 @@ export default function IndustryGapNetwork() {
                 viewport={{ once: true }}
                 transition={{
                   duration: 0.45,
-                  delay: 0.01 * i,
+                  delay: 0.02 * i,
                   ease: [0.16, 1, 0.3, 1],
                 }}
               />
