@@ -141,7 +141,7 @@ export default function HeroSection() {
         aria-hidden="true"
         style={{
           background:
-            'radial-gradient(ellipse 80% 70% at 50% 48%, rgba(10,10,12,0.18) 0%, rgba(10,10,12,0.42) 100%)',
+            'radial-gradient(ellipse 80% 70% at 50% 48%, rgba(10,10,12,0.28) 0%, rgba(10,10,12,0.55) 100%)',
         }}
       />
 
@@ -150,7 +150,7 @@ export default function HeroSection() {
         aria-hidden="true"
         style={{
           background:
-            'linear-gradient(to top, rgba(10,10,12,0.5) 0%, transparent 28%, transparent 90%, rgba(10,10,12,0.12) 100%)',
+            'linear-gradient(to top, rgba(10,10,12,0.62) 0%, transparent 26%, transparent 88%, rgba(10,10,12,0.2) 100%)',
         }}
       />
 
@@ -171,7 +171,7 @@ export default function HeroSection() {
           className="absolute inset-0"
           style={{
             background:
-              'linear-gradient(to bottom, transparent 0%, rgba(10,10,12,0.35) 48%, rgba(10,10,12,0.82) 78%, #0A0A0C 100%)',
+              'linear-gradient(to bottom, transparent 0%, rgba(10,10,12,0.45) 48%, rgba(10,10,12,0.9) 78%, #0A0A0C 100%)',
           }}
         />
       </div>
