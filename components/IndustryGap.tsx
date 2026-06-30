@@ -57,9 +57,9 @@ export default function IndustryGap() {
           Studios chase trends blind. Brands sponsor creators without verified
           audience data. The Minecraft meta shifts overnight — and nobody has a
           single source of truth for what&apos;s actually moving across the{' '}
-          <span className="text-sky-400/90">Minecraft ecosystem</span>. The gap
+          <span className="text-amber-400/90">Minecraft ecosystem</span>. The gap
           isn&apos;t creativity. It&apos;s{' '}
-          <span className="text-sky-400 font-medium">data transparency</span>.
+          <span className="text-amber-400 font-medium">data transparency</span>.
         </p>
 
         <AnimatePresence>

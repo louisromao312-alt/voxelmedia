@@ -72,7 +72,15 @@ export default function WaitlistForm({ id }: { id?: string }) {
         </div>
 
         {/* Large form container */}
-        <div className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-8 sm:p-10 backdrop-blur-sm">
+        <div className="relative overflow-visible rounded-2xl border border-white/[0.08] bg-white/[0.02] p-8 sm:p-10 backdrop-blur-sm">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/voxel-brief/bird.png"
+            alt=""
+            draggable={false}
+            className="pointer-events-none absolute -right-1 -top-10 z-30 h-auto w-[6.825rem] translate-x-[18px] translate-y-[2px] sm:-right-2 sm:-top-11 sm:w-[7.8rem] sm:translate-x-[20px]"
+            aria-hidden="true"
+          />
           <LayoutGroup>
             <AnimatePresence mode="wait">
               {state === 'success' ? (

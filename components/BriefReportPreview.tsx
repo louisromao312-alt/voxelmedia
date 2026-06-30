@@ -28,18 +28,9 @@ export default function BriefReportPreview() {
 
   return (
     <div
-      className="relative h-full min-h-[280px] md:min-h-[320px] rounded-xl overflow-visible border border-white/[0.08] bg-[#0A0A0C] font-mono text-left"
+      className="relative h-full min-h-[280px] md:min-h-[320px] rounded-xl overflow-hidden border border-white/[0.08] bg-[#0A0A0C] font-mono text-left"
       aria-hidden="true"
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/voxel-brief/bird.png"
-        alt=""
-        draggable={false}
-        className="pointer-events-none absolute -right-1 -top-7 z-20 h-auto w-[5.25rem] translate-x-[10px] -translate-y-[6px] sm:-right-2 sm:-top-8 sm:w-[6rem] sm:translate-x-[12px] sm:-translate-y-[8px]"
-        aria-hidden="true"
-      />
-
       <div className="relative overflow-hidden rounded-xl">
       {/* Terminal chrome */}
       <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/[0.06] bg-white/[0.03]">
